@@ -14,11 +14,15 @@ import Profile from "./Profile";
 import LightDark from "./Light-Dark";
 
 import Notifications from "./Notifications";
+import { useLocation } from 'react-router';
+import { useCare } from '@/context/itcare';
 
 
 const Header = () => {
  
   const { toggleSidebar } = useSidebar();
+  const care = useLocation().pathname.startsWith('/it');
+  const { user } = useCare();
 
   return (
     <>
@@ -27,7 +31,7 @@ const Header = () => {
           <div className="mx-auto flex flex-wrap items-center justify-between p-2">
             <div className="flex gap-2 items-center">
               <div className="block lg:hidden">
-                <FullLogo />
+                {care ? <span className="font-semibold">ITCare</span> : <FullLogo />}
               </div>
 
               <Button
@@ -35,6 +39,7 @@ const Header = () => {
                 size="icon"
                 className="p-2 hover:bg-primary/5 rounded-full transition cursor-pointer"
                 onClick={toggleSidebar}
+                aria-label="Mở hoặc thu gọn menu"
               >
                 <PanelLeft size={21}
                 />
@@ -55,7 +60,7 @@ const Header = () => {
 
 
               <div className="sm:block hidden">
-                <Search />
+                {care ? <span className="text-sm text-muted-foreground">Hỗ trợ IT văn phòng</span> : <Search />}
               </div>
             </div>
 
@@ -67,12 +72,12 @@ const Header = () => {
              
 
               {/* Notifications Dropdown */}
-              <Notifications className="sm:block hidden" />
+              {!care && <Notifications className="sm:block hidden" />}
 
            
 
               {/* Profile Dropdown */}
-              <Profile />
+              {care ? <span className="text-sm px-2 hidden sm:block">{user?.name}</span> : <Profile />}
             </div>
           </div>
         </nav>

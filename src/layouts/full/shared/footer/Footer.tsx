@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+import { useLocation } from 'react-router';
 
 
 type SearchType = {
@@ -12,6 +13,8 @@ const searchSugg: SearchType[] = [
 ];
 
 export default function Footer() {
+    const care = useLocation().pathname.startsWith('/it');
+    if (care) return <p className="text-xs text-muted-foreground text-center">ITCare · Bản mẫu giao diện · <a href="https://shadcndashboard.dev/" className="underline">Shadcn Dashboard</a></p>;
     return (
         <div className="flex md:flex-row flex-col items-center justify-between gap-3 text-center">
             <p className="text-sm text-muted-foreground">

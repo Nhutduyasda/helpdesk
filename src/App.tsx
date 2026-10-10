@@ -1,12 +1,13 @@
 import { RouterProvider } from 'react-router';
 import router from './routes/Router';
 import './css/globals.css';
+import { CareProvider } from './context/itcare';
 
 function App() {
   return (
     <>
     
-      <RouterProvider router={router} />
+      <CareProvider><RouterProvider router={router} /></CareProvider>
     </>
   );
 }

@@ -69,10 +69,14 @@ export function toTitleCase(str: string) {
 
 interface DynamicTableProps<T> {
   data?: T[]
+  showActions?: boolean
+  localized?: boolean
 }
 
 const DataTable = <T extends Record<string, unknown>>({
   data = [],
+  showActions = true,
+  localized = false,
 }: DynamicTableProps<T>) => {
   const [globalFilter, setGlobalFilter] = useState('')
   const [sorting, setSorting] = useState<SortingState>([])
@@ -354,8 +358,8 @@ const DataTable = <T extends Record<string, unknown>>({
       },
     }
 
-    return [...baseColumns, actionColumn]
-  }, [data])
+    return showActions ? [...baseColumns, actionColumn] : baseColumns
+  }, [data, showActions])
 
   // React Table Setup
   const table = useReactTable({
@@ -405,7 +409,7 @@ const DataTable = <T extends Record<string, unknown>>({
     <Card>
       <div>
         {data?.length === 0 ? (
-          <p className='text-center py-8 text-gray-500'>No data available.</p>
+          <p className='text-center py-8 text-muted-foreground'>{localized ? 'Không có yêu cầu phù hợp.' : 'No data available.'}</p>
         ) : (
           <>
             {/* Search + Download */}
@@ -413,7 +417,7 @@ const DataTable = <T extends Record<string, unknown>>({
               <div className='pt-0 flex items-center justify-between flex-wrap gap-4'>
                 <CardTitle>
                   <h3 className='text-xl font-semibold'></h3>
-                    Employee Data Table
+                    {localized ? 'Danh sách yêu cầu' : 'Employee Data Table'}
                   
                 </CardTitle>
                 <div className='flex items-center gap-2 flex-wrap'>
@@ -422,16 +426,18 @@ const DataTable = <T extends Record<string, unknown>>({
                     className='max-w-96 lg:min-w-96 min-w-full placeholder:text-gray-400 dark:placeholder:text-white/20'
                     value={globalFilter ?? ''}
                     onChange={(e) => setGlobalFilter(e.target.value)}
-                    placeholder='Search your relevant items...'
+                    placeholder={localized ? 'Tìm trong bảng…' : 'Search your relevant items...'}
+                    aria-label={localized ? 'Tìm trong bảng' : 'Search table'}
                   />
                   <Button
                     onClick={handleDownload}
+                    aria-label={localized ? 'Tải CSV' : 'Download CSV'}
                     className='p-2 px-4 rounded-md '>
-                    <Icon
+                    {localized ? 'CSV' : <Icon
                       icon='material-symbols:download-rounded'
                       width={24}
                       height={24}
-                    />
+                    />}
                   </Button>
                 </div>
               </div>
@@ -494,7 +500,7 @@ const DataTable = <T extends Record<string, unknown>>({
                         <TableCell
                           colSpan={columns.length}
                           className='text-center p-6 text-gray-500 dark:text-white/70 font-medium'>
-                          No results found.
+                          {localized ? 'Không tìm thấy kết quả.' : 'No results found.'}
                         </TableCell>
                       </TableRow>
                     )}
@@ -510,17 +516,17 @@ const DataTable = <T extends Record<string, unknown>>({
                   onClick={() => table.previousPage()}
                   disabled={!table.getCanPreviousPage()}
                   variant={'secondary'}>
-                  Previous
+                  {localized ? 'Trước' : 'Previous'}
                 </Button>
                 <Button
                   onClick={() => table.nextPage()}
                   disabled={!table.getCanNextPage()}>
-                  Next
+                  {localized ? 'Sau' : 'Next'}
                 </Button>
               </div>
 
               <div className='text-forest-black dark:text-white/90 font-medium text-base'>
-                Page {table.getState().pagination.pageIndex + 1} of{' '}
+                {localized ? 'Trang' : 'Page'} {table.getState().pagination.pageIndex + 1} {localized ? '/' : 'of'}{' '}
                 {table.getPageCount()}
               </div>
 
@@ -528,7 +534,7 @@ const DataTable = <T extends Record<string, unknown>>({
                 <Label
                   htmlFor='pageSize'
                   className='mr-0 text-forest-black dark:text-white/90 text-base font-medium whitespace-nowrap min-w-32'>
-                  Rows per page:
+                  {localized ? 'Số dòng mỗi trang:' : 'Rows per page:'}
                 </Label>
                 <Select
                   value={String(table.getState().pagination.pageSize)}

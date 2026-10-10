@@ -1,0 +1,230 @@
+{
+  "screens": [
+    {
+      "name": "M00-login-390",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "name": "M00-login-error",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "name": "M01-home-390",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "name": "M02-report-390",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "name": "M02-validation-error",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "name": "M02-photo-preview",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "name": "M03-result-390",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "name": "M05-details-photo-390",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "name": "M04-requests-390",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "name": "M02-submission-error",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "name": "M01-home-375x812",
+      "width": 375,
+      "scroll": 375
+    },
+    {
+      "name": "M02-report-375x812",
+      "width": 375,
+      "scroll": 375
+    },
+    {
+      "name": "M04-requests-375x812",
+      "width": 375,
+      "scroll": 375
+    },
+    {
+      "name": "M05-details-375x812",
+      "width": 375,
+      "scroll": 375
+    },
+    {
+      "name": "M01-home-390x844",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "name": "M02-report-390x844",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "name": "M04-requests-390x844",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "name": "M05-details-390x844",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "name": "M01-home-768x1024",
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "name": "M02-report-768x1024",
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "name": "M04-requests-768x1024",
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "name": "M05-details-768x1024",
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "name": "D00-login-1440",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "name": "D01-inbox-1440",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "name": "D02-details-1440",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "name": "D02-resolved",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "name": "D03-history-1440",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "name": "D04-employees-1440",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "name": "D01-inbox-1366x768",
+      "width": 1366,
+      "scroll": 1366
+    },
+    {
+      "name": "D02-details-1366x768",
+      "width": 1366,
+      "scroll": 1366
+    },
+    {
+      "name": "D01-inbox-1440x900",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "name": "D02-details-1440x900",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "name": "D01-inbox-768x1024",
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "name": "D02-details-768x1024",
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "name": "D01-inbox-375x812",
+      "width": 375,
+      "scroll": 375
+    },
+    {
+      "name": "D02-details-375x812",
+      "width": 375,
+      "scroll": 375
+    },
+    {
+      "name": "D01-empty-filter",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "name": "D01-sidebar-collapsed",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "name": "D01-dark",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "name": "D01-mobile-sidebar-open",
+      "width": 375,
+      "scroll": 375
+    },
+    {
+      "name": "reference-source-tickets-1440",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "name": "reference-source-login-1440",
+      "width": 1440,
+      "scroll": 1440
+    }
+  ],
+  "checks": [
+    "Empty report and invalid file rejected",
+    "Photo-only submission awaits mock completion",
+    "Employee reply saved",
+    "Description-only submission works; failure preserves entered content",
+    "Employee cannot view another employee request",
+    "Employee logout redirects to login",
+    "IT acknowledgement, remote method, reply and resolution saved",
+    "On-site, waiting and closed actions work",
+    "History pagination and CSV export work",
+    "History status filter works",
+    "Mock employee account toggle works",
+    "Mobile sidebar opens and closes; dark theme works",
+    "Injected fetch failure displays retry; retry to empty state works"
+  ],
+  "errors": []
+}
