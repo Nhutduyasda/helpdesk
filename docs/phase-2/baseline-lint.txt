@@ -1,0 +1,52 @@
+
+> shadcn-dashboard-free@1.0.0 lint
+> eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0
+
+
+E:\DevZone\Helpdesk\ITCare\src\api\blog\blogdata.ts
+  281:14  error  'error' is defined but never used         @typescript-eslint/no-unused-vars
+  289:88  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\DevZone\Helpdesk\ITCare\src\api\global-fetcher.ts
+  12:40  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  24:39  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  36:41  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  48:42  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\DevZone\Helpdesk\ITCare\src\components\apps\blog\blog-featuredcard.tsx
+  33:6  warning  React Hook useEffect has a missing dependency: 'setLoading'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+E:\DevZone\Helpdesk\ITCare\src\components\apps\blog\blogtable\manage-blogtable.tsx
+  256:31  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  256:39  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  257:17  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\DevZone\Helpdesk\ITCare\src\components\apps\blog\detail\index.tsx
+  67:6  warning  React Hook useEffect has a missing dependency: 'setLoading'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+E:\DevZone\Helpdesk\ITCare\src\components\apps\notes\index.tsx
+  16:18  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\DevZone\Helpdesk\ITCare\src\components\apps\notes\notes-list.tsx
+  21:52  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\DevZone\Helpdesk\ITCare\src\context\blog-context\index.tsx
+  42:38  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\DevZone\Helpdesk\ITCare\src\context\ticket-context\index.tsx
+  17:23  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  29:38  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\DevZone\Helpdesk\ITCare\src\layouts\full\vertical\header\Search.tsx
+  17:31  error    Unexpected any. Specify a different type                                                                      @typescript-eslint/no-explicit-any
+  18:18  error    Unexpected any. Specify a different type                                                                      @typescript-eslint/no-explicit-any
+  52:6   warning  React Hook useMemo has a missing dependency: 'searchItems'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+E:\DevZone\Helpdesk\ITCare\src\types\apps\blog.ts
+  20:17  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\DevZone\Helpdesk\ITCare\vite.config.ts
+  26:85  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+✖ 21 problems (18 errors, 3 warnings)
+

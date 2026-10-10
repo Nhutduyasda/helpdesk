@@ -1,33 +1,6 @@
 import { http, HttpResponse, delay } from 'msw';
 
-export const statuses = [
-  'Mới',
-  'Đã tiếp nhận',
-  'Đang xử lý',
-  'Chờ phản hồi',
-  'Đã giải quyết',
-  'Đã đóng',
-] as const;
-export type Status = (typeof statuses)[number];
-export type Employee = {
-  id: string;
-  name: string;
-  department: string;
-  role: 'employee' | 'it';
-  active: boolean;
-};
-export type Incident = {
-  id: string;
-  employeeId: string;
-  description: string;
-  photos: string[];
-  created: string;
-  status: Status;
-  method?: string;
-  resolution?: string;
-  history: { date: string; text: string }[];
-  replies: { date: string; author: string; text: string }[];
-};
+import { statuses, type Employee, type Incident, type Status } from './domain';
 export const employees: Employee[] = [
   { id: 'e1', name: 'Nguyễn Minh Anh', department: 'Kế toán', role: 'employee', active: true },
   {

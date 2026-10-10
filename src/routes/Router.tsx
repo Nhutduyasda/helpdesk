@@ -3,6 +3,7 @@
 import { lazy } from 'react';
 import { Navigate, createBrowserRouter } from 'react-router';
 import Loadable from '../layouts/full/shared/loadable/Loadable';
+import { demoMode } from '@/integrations/supabase/client';
 
 /* ***Layouts**** */
 const FullLayout = Loadable(lazy(() => import('../layouts/full/FullLayout')));
@@ -59,6 +60,7 @@ const TwoSteps2 = Loadable(lazy(() => import('../views/auth/auth2/two-steps')));
 const Maintainance = Loadable(lazy(() => import('../views/auth/maintenance')));
 
 const Router = [
+  { path: '/', element: <Navigate to='/login' replace /> },
   { path: '/login', element: <CareLogin /> },
   { path: '/it/login', element: <CareLogin /> },
   { path: '/employee', element: <EmployeeLayout />, children: [
@@ -76,7 +78,7 @@ const Router = [
     { path: 'tickets/:id', element: <Details /> },
     { path: 'employees', element: <Staff /> },
   ] },
-  {
+  ...(import.meta.env.DEV && demoMode ? [{
     path: '/',
     element: <FullLayout />,
     children: [
@@ -122,6 +124,8 @@ const Router = [
       { path: '*', element: <Navigate to="/auth/404" /> },
     ],
   },
+] : []),
+  { path: '*', element: <Navigate to='/login' replace /> },
 ];
 
 const router = createBrowserRouter(Router);

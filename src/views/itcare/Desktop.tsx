@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Link, Navigate, useLocation, useParams } from 'react-router';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -22,11 +22,12 @@ import {
 } from '@/components/ui/select';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useCare } from '@/context/itcare';
-import { statuses, type Status } from '@/api/itcare/data';
+import { statuses, type Status } from '@/api/itcare/domain';
 import { CarePage, DataState, StatusBadge, dateText } from './shared';
 import StyleDivider from '@/components/shared/StyleDivider';
 import { cn } from '@/lib/utils';
 import DataTable from '@/components/tables/data-table/DataTable';
+import Spinner from '@/views/spinner/Spinner';
 
 export function Filter({
   label,
@@ -166,7 +167,7 @@ export function Inbox() {
               />
               <div className="flex flex-wrap gap-2 mt-4">
                 {visible.map((t) => (
-                  <Button key={t.id} variant="outline" render={<Link to={`/it/tickets/${t.id}`} />}>
+                  <Button key={t.id} variant="outline" nativeButton={false} render={<Link to={`/it/tickets/${t.id}`} />}>
                     Xem {t.id}
                   </Button>
                 ))}
@@ -222,7 +223,7 @@ export function Inbox() {
                           {dateText(t.created)}
                         </TableCell>
                         <TableCell>
-                          <Button variant="outline" render={<Link to={`/it/tickets/${t.id}`} />}>
+                          <Button variant="outline" nativeButton={false} render={<Link to={`/it/tickets/${t.id}`} />}>
                             Chi tiết
                           </Button>
                         </TableCell>
@@ -247,8 +248,10 @@ export function Inbox() {
 }
 export function Details() {
   const { id } = useParams();
-  const { tickets, employees, user, update, loading } = useCare();
+  const { tickets, employees, user, update, loading, error: dataError, demo } = useCare();
   const [reply, setReply] = useState('');
+  const operation = useRef<{ payload: string; id: string } | null>(null);
+  const actionLock = useRef(false);
   const [resolution, setResolution] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -261,19 +264,24 @@ export function Details() {
     reply?: string;
     resolution?: string;
   }) {
-    if (!ticket) return;
+    if (!ticket || actionLock.current) return;
+    actionLock.current = true;
     setBusy(true);
     setError('');
     try {
-      await update(ticket.id, input);
+      const payload = JSON.stringify([ticket.id, input]);
+      if (operation.current?.payload !== payload) operation.current = { payload, id: crypto.randomUUID() };
+      await update(ticket.id, input, operation.current.id);
+      operation.current = null;
       if (input.reply) setReply('');
-    } catch {
-      setError('Không lưu được thay đổi. Vui lòng thử lại.');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Không lưu được thay đổi. Vui lòng thử lại.');
     } finally {
+      actionLock.current = false;
       setBusy(false);
     }
   }
-  if (!loading && !ticket)
+  if (!loading && !dataError && !ticket)
     return (
       <Card className="ring-1! ring-border! p-6">
         <h1>Không tìm thấy yêu cầu</h1>
@@ -363,8 +371,9 @@ export function Details() {
                     maxLength={2000}
                     onChange={(e) => setReply(e.target.value)}
                     required
+                    disabled={busy || (!demo && ticket.status === 'Đã đóng')}
                   />
-                  <Button type="submit" className="min-h-11" disabled={busy || !reply.trim()}>
+                  <Button type="submit" className="min-h-11" disabled={busy || !reply.trim() || (!demo && ticket.status === 'Đã đóng')}>
                     {busy ? 'Đang lưu…' : 'Gửi phản hồi'}
                   </Button>
                 </form>
@@ -385,7 +394,7 @@ export function Details() {
                         key={a.label}
                         variant="outline"
                         className="min-h-11"
-                        disabled={busy || a.status === ticket.status}
+                        disabled={busy || a.status === ticket.status || (!demo && (ticket.status === 'Đã đóng' || (a.status === 'Đã đóng' && ticket.status !== 'Đã giải quyết')))}
                         onClick={() => void action({ status: a.status as Status })}
                       >
                         {a.label}
@@ -394,7 +403,7 @@ export function Details() {
                     <Button
                       variant="outline"
                       className="min-h-11"
-                      disabled={busy}
+                      disabled={busy || (!demo && ticket.status === 'Đã đóng')}
                       onClick={() => void action({ method: 'Từ xa', status: 'Đang xử lý' })}
                     >
                       Yêu cầu hỗ trợ từ xa
@@ -402,7 +411,7 @@ export function Details() {
                     <Button
                       variant="outline"
                       className="min-h-11"
-                      disabled={busy}
+                      disabled={busy || (!demo && ticket.status === 'Đã đóng')}
                       onClick={() => void action({ method: 'Tại chỗ', status: 'Đang xử lý' })}
                     >
                       Ghi nhận hỗ trợ tại chỗ
@@ -426,7 +435,7 @@ export function Details() {
                     />
                     <Button
                       type="submit"
-                      disabled={busy || !resolution.trim()}
+                      disabled={busy || !resolution.trim() || (!demo && ticket.status === 'Đã đóng')}
                       className="min-h-11 w-full"
                     >
                       Đánh dấu đã giải quyết
@@ -461,7 +470,7 @@ export function Details() {
   );
 }
 export function Staff() {
-  const { employees, toggleEmployee } = useCare();
+  const { employees, toggleEmployee, demo } = useCare();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   return (
@@ -469,7 +478,7 @@ export function Staff() {
       <Card className="py-5 px-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h1 className="text-xl">Nhân viên</h1>
-          <p className="text-sm text-muted-foreground">Danh sách tổng hợp · tài khoản mẫu</p>
+          <p className="text-sm text-muted-foreground">{demo ? 'Danh sách tổng hợp · tài khoản mẫu' : 'Danh sách nhân viên được cấp quyền'}</p>
         </div>
       </Card>
       <StyleDivider />
@@ -501,13 +510,13 @@ export function Staff() {
                           try {
                             await toggleEmployee(e.id);
                           } catch {
-                            setError('Không cập nhật được tài khoản mẫu.');
+                            setError('Không cập nhật được tài khoản. Vui lòng thử lại.');
                           } finally {
                             setBusy(false);
                           }
                         }}
                       >
-                        {e.active ? 'Tạm khóa mẫu' : 'Kích hoạt mẫu'}
+                        {demo ? (e.active ? 'Tạm khóa mẫu' : 'Kích hoạt mẫu') : (e.active ? 'Tạm khóa' : 'Kích hoạt')}
                       </Button>
                     )}
                   </TableCell>
@@ -526,8 +535,8 @@ export function Staff() {
   );
 }
 export function ItGate({ children }: { children: React.ReactNode }) {
-  const { user } = useCare();
+  const { user, authLoading } = useCare();
+  if (authLoading) return <Spinner />;
   return user?.role === 'it' ? <>{children}</> : <Navigate to="/it/login" replace />;
 }
 export default Inbox;
-

@@ -9,7 +9,7 @@ import { Attribution } from './shared';
 
 export default function Login() {
   const it = useLocation().pathname.startsWith('/it');
-  const { login } = useCare();
+  const { login, demo, configurationError, authLoading, authError } = useCare();
   const navigate = useNavigate();
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
@@ -32,8 +32,8 @@ export default function Login() {
             setBusy(true);
             setError('');
             try {
-              await login(it ? 'it' : 'employee', name, password);
-              navigate(it ? '/it/inbox' : '/employee');
+              const account = await login(it ? 'it' : 'employee', name, password);
+              navigate(account.role === 'it' ? '/it/inbox' : '/employee');
             } catch (err) {
               setError((err as Error).message);
             } finally {
@@ -46,6 +46,7 @@ export default function Login() {
             <Input
               className="min-h-11 text-base"
               id="username"
+              type={demo ? 'text' : 'email'}
               autoComplete="username"
               required
               value={name}
@@ -64,19 +65,19 @@ export default function Login() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          {error && (
+          {(error || authError || configurationError) && (
             <p className="text-destructive text-sm" role="alert">
-              {error}
+              {error || authError || configurationError}
             </p>
           )}
-          <Button className="w-full min-h-11" type="submit" disabled={busy}>
+          <Button className="w-full min-h-11" type="submit" disabled={busy || authLoading || !!configurationError}>
             {busy ? 'Đang đăng nhập…' : 'Đăng nhập'}
           </Button>
         </form>
-        <p className="text-xs text-muted-foreground">
+        {import.meta.env.DEV && demo ? <p className="text-xs text-muted-foreground">
           Đăng nhập mẫu: tên bất kỳ · mật khẩu <strong>demo123</strong>.{' '}
           {it ? 'Tài khoản IT Võ Đức Minh.' : 'Tài khoản Nguyễn Minh Anh.'}
-        </p>
+        </p> : <p className="text-xs text-muted-foreground">Dùng email được công ty cấp quyền. Liên hệ IT nếu cần tài khoản hoặc đặt lại mật khẩu.</p>}
         <Link className="text-sm underline text-center" to={it ? '/login' : '/it/login'}>
           {it ? 'Dành cho nhân viên' : 'Dành cho IT'}
         </Link>

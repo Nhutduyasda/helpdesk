@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "checks": [
+    "No demo credentials/session shortcut/secret-key marker in compiled JS",
+    "Forged demo identity cannot open IT/employee protected routes",
+    "Missing configuration disables login and displays error",
+    "No MSW registration or mock API requests"
+  ],
+  "errors": []
+}

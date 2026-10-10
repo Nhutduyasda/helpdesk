@@ -1,0 +1,32 @@
+
+> shadcn-dashboard-free@1.0.0 test
+> node --experimental-strip-types --test tests/*.test.mjs
+
+✔ A: employee reads own submitted ticket but not another employee draft (1465.2438ms)
+✔ B: reserved upload path is private and rejects guessed/cross-owner uploads (21.0205ms)
+✔ C/D/J: browser cannot change ownership, status, role, history or disable accounts directly (10.0893ms)
+✔ E: inactive user cannot query business data or invoke mutations (2.6405ms)
+✔ F/M: IT can read all submitted tickets and update atomically; comments/events obey ownership (16.0144ms)
+✔ G: unauthenticated roles have no table/RPC access (3.3699ms)
+✔ H: repeated request IDs and operation IDs do not duplicate records (9.9326ms)
+✔ I: missing upload or wrong MIME/size cannot finalize; retry remains a draft (10.9632ms)
+✔ failed IT mutation rolls back comment and history; resolve then closed is read-only (10.9558ms)
+✔ account deactivation is enforced immediately even with an existing user identity (5.1823ms)
+✔ private bucket, size/type limits and all business tables have RLS enabled (1.9442ms)
+✔ A: other employee submitted ticket is hidden, not just their draft (1.2583ms)
+✔ metadata cannot provision IT privileges; distinct requests have unique server numbers (7.6747ms)
+✔ Storage duplicate 400/409 allows immutable retry to continue to verified finalization (1.4294ms)
+✔ Storage rejects permission, MIME and network errors without masking them as retries (0.8967ms)
+✔ upload failure never finalizes, retry reuses reservation and only metadata reaches database (12.6595ms)
+✔ already submitted retry skips uploads and finalization (0.298ms)
+✔ file count, spoofed image bytes and invalid formats rejected before writes (0.2735ms)
+✔ update uses database identity and stable internal status codes, never a browser actor (0.2448ms)
+✔ configuration rejects placeholders, insecure remote URLs and privileged JWTs (0.2711ms)
+ℹ tests 20
+ℹ suites 0
+ℹ pass 20
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1715.6397
