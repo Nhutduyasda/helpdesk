@@ -8,9 +8,12 @@ import { Textarea } from '@/components/ui/textarea';
 import { useCare } from '@/context/itcare';
 import LightDark from '@/layouts/full/vertical/header/Light-Dark';
 import { Attribution, DataState, TicketCards, StatusBadge, dateText } from './shared';
+import Spinner from '@/views/spinner/Spinner';
 
 export function EmployeeLayout() {
-  const { user, logout } = useCare();
+  const { user, logout, authLoading } = useCare();
+  const [logoutError, setLogoutError] = useState('');
+  if (authLoading) return <Spinner />;
   if (!user || user.role !== 'employee') return <Navigate to="/login" replace />;
   return (
     <div className="min-h-screen bg-background">
@@ -25,7 +28,7 @@ export function EmployeeLayout() {
               className="min-h-11 min-w-11"
               variant="ghost"
               aria-label="Đăng xuất"
-              onClick={logout}
+              onClick={() => { void logout().catch(() => setLogoutError('Đăng xuất chưa thành công. Vui lòng thử lại.')); }}
             >
               <LogOut />
             </Button>
@@ -33,15 +36,16 @@ export function EmployeeLayout() {
         </div>
       </header>
       <main className="max-w-xl mx-auto p-4 pb-24 space-y-6">
+        {logoutError && <p role="alert" className="text-destructive">{logoutError}</p>}
         <Outlet />
         <Attribution />
       </main>
       <nav className="fixed bottom-0 inset-x-0 border-t bg-background z-10 flex justify-center gap-2 p-2">
-        <Button className="min-h-11" variant="ghost" render={<Link to="/employee" />}>
+        <Button className="min-h-11" variant="ghost" nativeButton={false} render={<Link to="/employee" />}>
           <House />
           Trang chủ
         </Button>
-        <Button className="min-h-11" variant="ghost" render={<Link to="/employee/requests" />}>
+        <Button className="min-h-11" variant="ghost" nativeButton={false} render={<Link to="/employee/requests" />}>
           <List />
           Yêu cầu của tôi
         </Button>
@@ -60,7 +64,7 @@ export function Home() {
       <Card className="ring-1! ring-border! p-6">
         <h2>Báo sự cố chỉ trong vài bước</h2>
         <p className="text-sm text-muted-foreground">Chụp ảnh hoặc mô tả ngắn. IT sẽ hỗ trợ bạn.</p>
-        <Button className="min-h-14 w-full text-base" render={<Link to="/employee/report" />}>
+        <Button className="min-h-14 w-full text-base" nativeButton={false} render={<Link to="/employee/report" />}>
           <Plus />
           Báo sự cố
         </Button>
@@ -79,7 +83,7 @@ export function Home() {
         <p className="text-sm text-muted-foreground">
           Liên hệ trực tiếp nhân viên IT tại văn phòng để được hỗ trợ ngay.
         </p>
-        <Button variant="outline" className="min-h-11" render={<Link to="/employee/contact" />}>
+        <Button variant="outline" className="min-h-11" nativeButton={false} render={<Link to="/employee/contact" />}>
           Thông tin liên hệ IT
         </Button>
       </Card>
@@ -87,15 +91,16 @@ export function Home() {
   );
 }
 export function Contact() {
+  const { demo } = useCare();
   return (
     <Card className="ring-1! ring-border! p-6">
       <h1>Liên hệ IT</h1>
-      <p>Võ Đức Minh · Nhân viên IT (tài khoản mẫu)</p>
+      <p>{demo ? 'Võ Đức Minh · Nhân viên IT (tài khoản mẫu)' : 'Nhân viên IT tại văn phòng'}</p>
       <p className="text-sm text-muted-foreground">
         Với sự cố khẩn cấp, liên hệ trực tiếp IT tại văn phòng. Số điện thoại nội bộ sẽ được cấu
         hình trước giai đoạn thử nghiệm.
       </p>
-      <Button className="min-h-11" render={<Link to="/employee/report" />}>
+      <Button className="min-h-11" nativeButton={false} render={<Link to="/employee/report" />}>
         Gửi yêu cầu hỗ trợ
       </Button>
     </Card>
@@ -113,6 +118,8 @@ export function Requests() {
   );
 }
 export function Report() {
+  const requestId = useRef(crypto.randomUUID());
+  const submissionLock = useRef(false);
   const camera = useRef<HTMLInputElement>(null);
   const gallery = useRef<HTMLInputElement>(null);
   const { user, create } = useCare();
@@ -149,6 +156,7 @@ export function Report() {
             }),
         ),
       );
+      requestId.current = crypto.randomUUID();
       setPhotos((previous) => [...previous, ...images]);
     } catch {
       setError('Không đọc được ảnh. Vui lòng chọn lại.');
@@ -168,19 +176,22 @@ export function Report() {
         className="space-y-6"
         onSubmit={async (e) => {
           e.preventDefault();
+          if (submissionLock.current) return;
           if (!description.trim() && !photos.length) {
             setError('Vui lòng thêm ảnh hoặc mô tả sự cố.');
             return;
           }
+          submissionLock.current = true;
           setBusy(true);
           setError('');
           try {
-            const ticket = await create(description, photos);
+            const ticket = await create(description, photos, requestId.current);
             navigate(`/employee/submitted/${ticket.id}`);
-          } catch {
-            setError('Chưa gửi được yêu cầu. Nội dung vẫn được giữ lại, vui lòng thử lại.');
+          } catch (err) {
+            setError(err instanceof Error ? err.message : 'Chưa gửi được yêu cầu. Nội dung vẫn được giữ lại, vui lòng thử lại.');
           } finally {
             setBusy(false);
+            submissionLock.current = false;
           }
         }}
       >
@@ -255,7 +266,7 @@ export function Report() {
                   disabled={busy}
                   variant="outline"
                   className="min-h-11"
-                  onClick={() => setPhotos(photos.filter((_, j) => i !== j))}
+                  onClick={() => { requestId.current = crypto.randomUUID(); setPhotos(photos.filter((_, j) => i !== j)); }}
                 >
                   Xóa ảnh {i + 1}
                 </Button>
@@ -271,7 +282,7 @@ export function Report() {
             maxLength={2000}
             placeholder="Ví dụ: Máy in không in được từ sáng nay…"
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={(e) => { requestId.current = crypto.randomUUID(); setDescription(e.target.value); }}
             disabled={busy}
           />
         </div>
@@ -308,10 +319,10 @@ export function Submitted() {
           <div>
             <StatusBadge status={ticket.status} />
           </div>
-          <Button className="min-h-11" render={<Link to={`/employee/requests/${ticket.id}`} />}>
+          <Button className="min-h-11" nativeButton={false} render={<Link to={`/employee/requests/${ticket.id}`} />}>
             Xem chi tiết yêu cầu
           </Button>
-          <Button variant="outline" className="min-h-11" render={<Link to="/employee" />}>
+          <Button variant="outline" className="min-h-11" nativeButton={false} render={<Link to="/employee" />}>
             Về trang chủ
           </Button>
         </Card>

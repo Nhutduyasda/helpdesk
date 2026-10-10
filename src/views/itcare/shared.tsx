@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useCare } from '@/context/itcare';
-import type { Incident, Status } from '@/api/itcare/data';
+import type { Incident, Status } from '@/api/itcare/domain';
 import { cn } from '@/lib/utils';
 import StyleAwareWrapper from '@/components/shared/StyleAwareWrapper';
 export function CarePage({ children }: { children: React.ReactNode }) {
@@ -40,9 +40,10 @@ export function StatusBadge({ status }: { status: Status }) {
   );
 }
 export function Attribution() {
+  const { demo } = useCare();
   return (
     <p className="text-xs text-muted-foreground text-center py-6">
-      ITCare · Bản mẫu giao diện ·{' '}
+      ITCare · {demo ? 'Bản mẫu giao diện · ' : ''}{' '}
       <a className="underline" href="https://shadcndashboard.dev/">
         Shadcn Dashboard
       </a>

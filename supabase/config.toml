@@ -1,0 +1,8 @@
+project_id = "itcare-test"
+[auth]
+enabled = true
+site_url = "http://127.0.0.1:5174"
+additional_redirect_urls = ["http://localhost:5174"]
+enable_signup = false
+[auth.email]
+enable_signup = false

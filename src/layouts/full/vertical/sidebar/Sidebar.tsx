@@ -22,7 +22,8 @@ import { Ticket } from 'lucide-react';
 
 const SidebarLayout = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
   const care = useLocation().pathname.startsWith('/it');
-  const { user, logout } = useCare();
+  const { user, logout, demo } = useCare();
+  const [logoutError, setLogoutError] = React.useState('');
 
 
 
@@ -51,7 +52,7 @@ const SidebarLayout = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
 
             <SidebarFooter className="p-4">
                 <div className="hide-menu flex flex-col gap-2">
-                    {care ? <><p className="text-sm font-medium">{user?.name}</p><p className="text-xs text-muted-foreground">Nhân viên IT · Bản mẫu</p><Button variant="outline" onClick={logout}>Đăng xuất</Button></> : <><NavSecondary /><NavUser /></>}
+                    {care ? <><p className="text-sm font-medium">{user?.name}</p><p className="text-xs text-muted-foreground">{demo ? 'Nhân viên IT · Bản mẫu' : 'Nhân viên IT'}</p><Button variant="outline" onClick={() => { void logout().catch(() => setLogoutError('Đăng xuất chưa thành công. Vui lòng thử lại.')); }}>Đăng xuất</Button>{logoutError && <p role="alert" className="text-destructive text-xs">{logoutError}</p>}</> : <><NavSecondary /><NavUser /></>}
                 </div>
             </SidebarFooter>
 

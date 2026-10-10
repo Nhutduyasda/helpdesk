@@ -5,12 +5,17 @@ import App from './App.tsx';
 import Spinner from './views/spinner/Spinner.tsx';
 
 import { ThemeProvider } from './context/shadcntheme/ThemeContext.tsx';
+import { demoMode } from './integrations/supabase/client';
 
 async function deferRender() {
-  const { worker } = await import('./api/mocks/browser.ts');
-  return worker.start({
-    onUnhandledRequest: 'bypass',
-  });
+  if (import.meta.env.DEV) {
+    if (demoMode) {
+      const { worker } = await import('./api/mocks/browser.ts');
+      return worker.start({ onUnhandledRequest: 'bypass' });
+    }
+  }
+  const registrations = await navigator.serviceWorker?.getRegistrations().catch(() => []);
+  await Promise.all((registrations || []).filter(r => r.active?.scriptURL.endsWith('/mockServiceWorker.js')).map(r => r.unregister().catch(() => false)));
 }
 
 deferRender().then(() => {
