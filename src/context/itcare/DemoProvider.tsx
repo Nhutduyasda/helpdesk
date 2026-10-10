@@ -16,6 +16,7 @@ export default function DemoProvider({ children }: { children: ReactNode }) {
   });
   const value: React.ContextType<typeof CareContext> = {
     demo: true,
+    submissionProgress: null,
     authLoading: false,
     authError: null,
     configurationError: null,

@@ -40,6 +40,8 @@ export type CommentRow = {
   created_at: string;
 };
 export type EventRow = {
+  id: string;
+  actor_id: string;
   ticket_id: string;
   event_type: string;
   event_data: {
@@ -146,7 +148,7 @@ export function createCareService(gateway: CareGateway) {
             })),
         }));
     },
-    async create(description: string, photos: string[], requestId: string): Promise<TicketRow> {
+    async create(description: string, photos: string[], requestId: string, progress?: (message: string) => void): Promise<TicketRow> {
       if (
         photos.length > 3 ||
         (!description.trim() && !photos.length) ||
@@ -165,6 +167,7 @@ export function createCareService(gateway: CareGateway) {
             .join(''),
         })),
       );
+      progress?.('Đang chuẩn bị yêu cầu…');
       const ticket = await gateway.prepare(requestId, description.trim(), manifest);
       if (ticket.submitted_at) return ticket;
       const reserved = (await gateway.attachments())
@@ -172,8 +175,11 @@ export function createCareService(gateway: CareGateway) {
         .sort((a, b) => a.position - b.position);
       if (reserved.length !== blobs.length)
         throw new Error('Danh sách ảnh không khớp. Vui lòng thử lại.');
-      for (let i = 0; i < blobs.length; i++)
+      for (let i = 0; i < blobs.length; i++) {
+        progress?.(`Đang tải ảnh ${i + 1}/${blobs.length}…`);
         await gateway.upload(reserved[i].storage_path, blobs[i]);
+      }
+      progress?.('Đang xác nhận yêu cầu…');
       return gateway.finalize(ticket.id);
     },
     async update(ticket: Incident, input: TicketChange, operationId: string) {

@@ -1,0 +1,32 @@
+{
+  "checks": [
+    {
+      "name": "new ticket to IT without refresh",
+      "status": "PASSED"
+    },
+    {
+      "name": "Read state persists across reload; one entry per event",
+      "status": "PASSED"
+    },
+    {
+      "name": "IT reply and resolution to owner",
+      "status": "PASSED"
+    },
+    {
+      "name": "B receives no owner notification",
+      "status": "PASSED"
+    },
+    {
+      "name": "Notification transport failure preserves committed ticket",
+      "status": "PASSED"
+    },
+    {
+      "name": "Denied permission keeps in-app channel available (controlled browser permission case)",
+      "status": "PASSED"
+    }
+  ],
+  "backgroundPush": "BLOCKED",
+  "physicalOSDelivery": "NOT TESTED",
+  "passed": true,
+  "testTicketNumber": "ITC-1019"
+}

@@ -11,6 +11,7 @@ export type CareContext = {
   authError: string | null;
   configurationError: string | null;
   demo: boolean;
+  submissionProgress: string | null;
   login: (role: 'employee' | 'it', email: string, password: string) => Promise<Employee>;
   logout: () => Promise<void>;
   create: (description: string, photos: string[], requestId?: string) => Promise<Incident>;

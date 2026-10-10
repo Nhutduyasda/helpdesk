@@ -1,0 +1,25 @@
+{
+  "checks": [
+    {
+      "name": "A description submitted in browser",
+      "status": "PASSED"
+    },
+    {
+      "name": "Separate IT session acknowledges, replies, selects method and resolves",
+      "status": "PASSED"
+    },
+    {
+      "name": "A sees IT results after refresh",
+      "status": "PASSED"
+    },
+    {
+      "name": "Refresh after commit during pending response recovers one persistent ticket",
+      "status": "PASSED"
+    },
+    {
+      "name": "Expired session with rejected refresh returns to login",
+      "status": "PASSED"
+    }
+  ],
+  "passed": true
+}

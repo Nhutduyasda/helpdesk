@@ -19,4 +19,17 @@ Uploads and database operations cannot share a distributed transaction. This imp
 
 Duplicate standard uploads can return 400 or 409; only duplicate-object messages are accepted, not other errors with those status codes. See [Supabase standard uploads](https://supabase.com/docs/guides/storage/uploads/standard-uploads). Gateway tests cover both duplicates and rejected permission/MIME/conflict errors.
 
-`npm test` applies the exact migration to PGlite PostgreSQL with independent synthetic identities, roles, auth UID function and simulated Storage catalog. This verifies SQL grants/RLS/RPC behavior. It does **not** exercise Supabase Auth, PostgREST, Storage HTTP upload/signing or JWT validation. Those live checks remain required.
+`npm test` applies the exact migration to PGlite PostgreSQL with independent synthetic identities, roles, auth UID function and simulated Storage catalog. This verifies SQL grants/RLS/RPC behavior. It does **not** itself exercise Supabase Auth, PostgREST, Storage HTTP upload/signing or JWT validation.
+
+## Phase 3 live verification
+
+Real Auth, PostgREST, Storage upload/signing and ownership-negative checks now pass separately: see `PHASE_3_LIVE_QA.md` and `phase-3/live-data.json`. B cannot read A tickets, replies, events, attachment metadata or generate a signed URL. Anonymous REST/RPC and employee role/status escalation are denied. IT deactivation immediately blocks existing B JWT business/RPC/Storage access; B is restored afterward. Signed URLs were fetched successfully and rejected after expiry. Public signup is disabled. Browser expired-session testing is controlled, not a natural provider lifetime test.
+
+Notifications use the same RLS-constrained gateway and active profile. No new public writes or service-role browser credentials were introduced. Notification preferences retain only IDs in per-user bounded localStorage; ticket content is excluded. The production worker caches public static assets only. Already-issued signed URLs remain bearer capabilities until expiry; account deactivation cannot revoke a URL already shared outside the app.
+
+Remote security advisors on 2026-10-10 retain two warning categories:
+
+- Four authenticated-callable `SECURITY DEFINER` RPCs: intentional transactional endpoints with empty search paths, explicit active/role/owner checks and anon execute revoked. Local and live negative tests validate these guards; the warning remains recorded. [Advisor explanation](https://supabase.com/docs/guides/database/database-linter?lint=0029_authenticated_security_definer_function_executable).
+- Leaked-password protection remains disabled: an Auth configuration follow-up before a real pilot. No unrelated Auth settings were changed for notifications. [Password security](https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection).
+
+Staging HTTPS/remote CSP and physical-device security are NOT TESTED. Server-side binary validation, cleanup/retention ownership and actual support contact remain pilot prerequisites.

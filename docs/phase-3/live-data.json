@@ -1,0 +1,50 @@
+{
+  "mode": "live",
+  "checks": [
+    {
+      "name": "A/B/IT real login and active roles",
+      "status": "PASSED"
+    },
+    {
+      "name": "Description ticket persists; concurrent duplicate is idempotent",
+      "status": "PASSED"
+    },
+    {
+      "name": "Private image upload and verified finalization",
+      "status": "PASSED"
+    },
+    {
+      "name": "B cannot read A ticket, comments, history, metadata or generate image URL",
+      "status": "PASSED"
+    },
+    {
+      "name": "Employee cannot mutate IT status, another owner ticket or own role",
+      "status": "PASSED"
+    },
+    {
+      "name": "IT acknowledge, method, reply deduplication and resolution visible to A",
+      "status": "PASSED"
+    },
+    {
+      "name": "Closed ticket rejects subsequent changes",
+      "status": "PASSED"
+    },
+    {
+      "name": "Deactivation blocks previously accessible own ticket/storage and RPC with existing JWT; reactivation restores access",
+      "status": "PASSED"
+    },
+    {
+      "name": "Signed URL works then expires",
+      "status": "PASSED"
+    },
+    {
+      "name": "Anonymous direct API and RPC denied",
+      "status": "PASSED"
+    }
+  ],
+  "testTicketNumbers": [
+    "ITC-1020",
+    "ITC-1021"
+  ],
+  "passed": true
+}

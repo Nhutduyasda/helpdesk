@@ -1,0 +1,16 @@
+{
+  "id": "/",
+  "name": "ITCare — Hỗ trợ IT văn phòng",
+  "short_name": "ITCare",
+  "lang": "vi",
+  "start_url": "/login",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#171717",
+  "icons": [
+    {"src": "/icons/itcare-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "/icons/itcare-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "/icons/itcare-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}

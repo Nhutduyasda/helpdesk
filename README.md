@@ -1,3 +1,32 @@
+# ITCare
+
+Vietnamese office helpdesk using the approved Shadcn Dashboard UI, React/Vite and real Supabase Auth, PostgreSQL/RLS and private Storage. Phase 3 is on `phase-3-notifications-staging`, based on completed Phase 2; `main` still contains Phase 1.
+
+```powershell
+cd E:\DevZone\Helpdesk\ITCare
+npm ci
+# Copy .env.example to .env.local and fill the TEST project's public URL/key.
+npm run dev -- --host 127.0.0.1 --port 5174
+```
+
+Real data is the default; `VITE_ITCARE_DEMO=true` is honored only in development. Keep `ITCARE_TEST_*`, hosting tokens, admin keys and VAPID private keys without a `VITE_` prefix and outside hosting builds. `.env.local` is ignored. Accounts are provisioned administratively; public signup remains disabled.
+
+Verified scope: real login, persistent tickets/private images, IT workflow, A/B isolation, in-app notifications and static-only PWA/offline feedback. Closed-app notifications are not delivered. Staging is **DEFERRED by user** until hosting is configured; no staging URL or production-readiness claim exists.
+
+Run `npm test`, `npm run lint:itcare`, `npm run build` and `node scripts/scan-build.mjs`. Full repository lint retains inherited template failures.
+
+- [Live acceptance](docs/PHASE_3_LIVE_QA.md)
+- [Notification scope and push setup](docs/NOTIFICATION_ARCHITECTURE.md)
+- [PWA QA and Cloudflare staging guide](docs/PWA_STAGING_QA.md)
+- [Migration-history reconciliation](docs/MIGRATION_HISTORY.md)
+- [Security/RLS](docs/SECURITY_RLS.md) and [roadmap](docs/ROADMAP.md)
+
+For the existing cloud project, do not rerun the initial SQL. The verified migration now matches its cloud name: `supabase/migrations/20261010075402_itcare_initial.sql`. No schema reset or cloud history marking occurred.
+
+Original template documentation and attribution follow.
+
+---
+
 <p align="center">
    <a href="https://shadcndashboard.dev" target="_blank">
       <img src="https://shadcndashboard-demo.vercel.app/images/logos/logoicon.svg" alt="shadcndashboard-logo" width="50px" height="50px">

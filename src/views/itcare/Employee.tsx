@@ -9,6 +9,8 @@ import { useCare } from '@/context/itcare';
 import LightDark from '@/layouts/full/vertical/header/Light-Dark';
 import { Attribution, DataState, TicketCards, StatusBadge, dateText } from './shared';
 import Spinner from '@/views/spinner/Spinner';
+import { useOnline } from '@/hooks/use-online';
+import NotificationBell from './NotificationBell';
 
 export function EmployeeLayout() {
   const { user, logout, authLoading } = useCare();
@@ -23,6 +25,7 @@ export function EmployeeLayout() {
             ITCare
           </Link>
           <div className="flex items-center gap-2">
+            <NotificationBell />
             <LightDark />
             <Button
               className="min-h-11 min-w-11"
@@ -118,11 +121,12 @@ export function Requests() {
   );
 }
 export function Report() {
+  const online = useOnline();
   const requestId = useRef(crypto.randomUUID());
   const submissionLock = useRef(false);
   const camera = useRef<HTMLInputElement>(null);
   const gallery = useRef<HTMLInputElement>(null);
-  const { user, create } = useCare();
+  const { user, create, submissionProgress } = useCare();
   const navigate = useNavigate();
   const [description, setDescription] = useState('');
   const [photos, setPhotos] = useState<string[]>([]);
@@ -177,6 +181,7 @@ export function Report() {
         onSubmit={async (e) => {
           e.preventDefault();
           if (submissionLock.current) return;
+          if (!online) { setError('Mất kết nối. Ảnh và mô tả vẫn được giữ trên màn hình; kết nối mạng rồi thử lại.'); return; }
           if (!description.trim() && !photos.length) {
             setError('Vui lòng thêm ảnh hoặc mô tả sự cố.');
             return;
@@ -298,7 +303,7 @@ export function Report() {
           </p>
         )}
         <Button type="submit" disabled={busy || reading} className="w-full min-h-12">
-          {busy ? 'Đang gửi yêu cầu…' : 'Gửi yêu cầu'}
+          {busy ? submissionProgress || 'Đang gửi yêu cầu…' : 'Gửi yêu cầu'}
         </Button>
       </form>
     </>

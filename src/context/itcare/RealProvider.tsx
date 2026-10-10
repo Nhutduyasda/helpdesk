@@ -137,7 +137,7 @@ function RealData({
   logout: () => Promise<void>;
   invalidate: () => void;
 }) {
-  const options = { refreshInterval: 30000, revalidateOnFocus: true, revalidateOnReconnect: true };
+  const options = { refreshInterval: 5000, revalidateOnFocus: true, revalidateOnReconnect: true };
   const staff = useSWR(
     user ? ['itcare-profiles', user.id] : null,
     async () => {
@@ -153,12 +153,14 @@ function RealData({
   );
   const tickets = useSWR(user ? ['itcare-tickets', user.id] : null, () => service!.list(), options);
   const creating = useRef(false);
+  const [submissionProgress, setSubmissionProgress] = useState<string | null>(null);
   const value: React.ContextType<typeof CareContext> = {
     user,
     authLoading,
     authError,
     configurationError,
     demo: false,
+    submissionProgress,
     employees: user ? staff.data || [] : [],
     tickets: user ? tickets.data || [] : [],
     loading: authLoading || (user !== null && (tickets.isLoading || staff.isLoading)),
@@ -174,7 +176,7 @@ function RealData({
       if (creating.current) throw new Error('Yêu cầu đang được gửi.');
       creating.current = true;
       try {
-        const created = await service.create(description, photos, requestId);
+        const created = await service.create(description, photos, requestId, setSubmissionProgress);
         const result: Incident = {
           id: created.ticket_number,
           databaseId: created.id,
@@ -194,6 +196,7 @@ function RealData({
         return result;
       } finally {
         creating.current = false;
+        setSubmissionProgress(null);
       }
     },
     update: async (id, input, operationId = crypto.randomUUID()) => {

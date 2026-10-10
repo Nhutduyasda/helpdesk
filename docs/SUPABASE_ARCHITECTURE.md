@@ -1,6 +1,6 @@
 # Supabase integration and setup
 
-Phase 2 starts from `Nhutduyasda/helpdesk` main, commit `0b439d3cf5493840eeb79c97ba1c027932e5701d`. The Phase 1 React/Vite SPA, Context, SWR, router, components, typography and themes remain the frontend architecture. No Supabase project was supplied; cloud integration is implemented but not certified end to end.
+Phase 2 started from `Nhutduyasda/helpdesk` main, commit `0b439d3cf5493840eeb79c97ba1c027932e5701d`. The Phase 1 React/Vite SPA, Context, SWR, router, components, typography and themes remain. Phase 3 verified real Auth/Storage/PostgREST against `itcare-dev` (`agcoboeswdvnumzyrtbu`); see `PHASE_3_LIVE_QA.md`. Staging and physical-device acceptance remain unverified.
 
 ## Boundary and data flow
 
@@ -14,7 +14,7 @@ SWR refreshes every 30 seconds, on focus and reconnect, and after mutations. Thi
 
 1. Create a new disposable Supabase project in your own account. Do not use an unknown existing production database.
 2. Disable **Allow new users to sign up** in Authentication settings. Disable anonymous sign-ins. Configure your actual local/pilot site URL and redirect allowlist; local examples are in `supabase/config.toml`. Do not expose public registration.
-3. Run the complete `supabase/migrations/202610100001_itcare.sql` once in the test project's SQL Editor as its trusted database administrator. It creates tables, transactional RPCs, grants, RLS and the private bucket. Keep the default exposed schema `public`; do not expose `itcare_private` through the Data API. For repeatable local Supabase CLI use, provision its Docker requirements and apply migrations to a **new local test database**. The CLI/Docker route has not been run here.
+3. For a **new empty test project only**, run `supabase/migrations/20261010075402_itcare_initial.sql` once as its trusted administrator. It creates tables, transactional RPCs, grants, RLS and the private bucket. **Do not run it again on existing `itcare-dev`**: the remote schema/history already matches this version; see `MIGRATION_HISTORY.md`. Keep exposed schema `public`; do not expose `itcare_private`. For local CLI, provision Docker and apply migrations to a new local test database; that CLI/Docker route remains NOT TESTED here.
 4. Copy `.env.example` to `.env.local`. Fill `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` from the test project's settings. Use a publishable key (or legacy **anon** key), never a secret/service-role key. Vite variables are browser-visible; RLS provides authorization. Leave `VITE_ITCARE_DEMO=false`.
 5. Run `npm ci`, `npm run dev -- --host 127.0.0.1 --port 5174`. Restart Vite after changing environment variables. Configure the SPA host to serve `index.html` for application routes before any deployment.
 6. Run `npm test`, `npm run lint:itcare`, `npm run build`, `npm audit`; then execute the cloud acceptance checklist in `PHASE_2_QA_REPORT.md` with synthetic users.

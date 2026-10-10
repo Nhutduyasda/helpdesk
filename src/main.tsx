@@ -19,6 +19,11 @@ async function deferRender() {
 }
 
 deferRender().then(() => {
+  if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+    void navigator.serviceWorker.register('/itcare-sw.js').catch(() => {
+      console.warn('ITCare: chưa đăng ký được service worker. Ứng dụng vẫn có thể dùng khi có mạng.');
+    });
+  }
   createRoot(document.getElementById('root')!).render(
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
       <Suspense fallback={<Spinner />}>

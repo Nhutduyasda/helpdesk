@@ -7,7 +7,7 @@ fs.mkdirSync(out,{recursive:true});
 (async () => {
   const browser = await chromium.launch({channel:'msedge',headless:true});
   const page = await browser.newPage({viewport:{width:1440,height:900}});
-  const base = 'http://127.0.0.1:5174';
+  const base = process.env.QA_BASE_URL || 'http://127.0.0.1:5174';
   const wait = async () => { await page.waitForLoadState('networkidle'); await page.locator('.fallback-spinner').waitFor({state:'hidden'}); await page.getByText('Đang tải yêu cầu…',{exact:true}).waitFor({state:'hidden'}); await page.evaluate(() => document.fonts.ready); await page.waitForTimeout(400); };
   const shot = async name => { await wait(); assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)); await page.screenshot({path:path.join(out,`${name}.png`),fullPage:true}); };
   await page.goto(base+'/it/login'); await wait(); await page.getByLabel('Tên đăng nhập / email').fill('review'); await page.getByLabel('Mật khẩu',{exact:true}).fill('demo123'); await page.getByRole('button',{name:'Đăng nhập',exact:true}).click(); await page.waitForURL('**/it/inbox'); await shot('D01-inbox-1440'); await shot('D01-inbox-1440x900');

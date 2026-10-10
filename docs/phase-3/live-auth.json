@@ -1,0 +1,24 @@
+{
+  "project": "agcoboeswdvnumzyrtbu",
+  "mode": "live",
+  "checks": [
+    {
+      "name": "invalid-password",
+      "status": "PASSED"
+    },
+    {
+      "name": "IT-login",
+      "status": "PASSED"
+    },
+    {
+      "name": "IT-refresh-session",
+      "status": "PASSED"
+    },
+    {
+      "name": "IT-logout",
+      "status": "PASSED"
+    }
+  ],
+  "exceptions": 0,
+  "passed": true
+}
