@@ -41,7 +41,7 @@ before(async () => {
  alter table storage.objects enable row level security; grant usage on schema storage to authenticated,anon; grant select,insert,update,delete on storage.objects to authenticated;`);
   await db.exec(
     await readFile(
-      new URL('../supabase/migrations/202610100001_itcare.sql', import.meta.url),
+      new URL('../supabase/migrations/20261010075402_itcare_initial.sql', import.meta.url),
       'utf8',
     ),
   );

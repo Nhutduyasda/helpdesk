@@ -8,9 +8,10 @@ const path = require('node:path');
   const browser = await chromium.launch({ channel: 'msedge', headless: true });
   const page = await browser.newPage();
   const results = [];
-  for (const name of fs.readdirSync('docs/phase-2/screenshots').filter((f) => f.endsWith('.png'))) {
+  const currentDirectory = process.env.QA_COMPARE_DIRECTORY || 'docs/phase-2/screenshots';
+  for (const name of fs.readdirSync(currentDirectory).filter((f) => f.endsWith('.png'))) {
     const old = path.join('docs/screenshots', name),
-      current = path.join('docs/phase-2/screenshots', name);
+      current = path.join(currentDirectory, name);
     if (!fs.existsSync(old)) continue;
     const images = [old, current].map(
       (p) => 'data:image/png;base64,' + fs.readFileSync(p).toString('base64'),
@@ -49,7 +50,7 @@ const path = require('node:path');
     results.push({ name, ...metrics });
   }
   fs.writeFileSync(
-    'docs/phase-2/visual-comparison.json',
+    process.env.QA_RESULT_FILE || 'docs/phase-2/visual-comparison.json',
     JSON.stringify(
       {
         method:

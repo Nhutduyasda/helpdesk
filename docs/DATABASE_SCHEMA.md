@@ -1,6 +1,6 @@
 # Database schema
 
-Migration: `supabase/migrations/202610100001_itcare.sql`. Apply once to a new Supabase test project. Do not edit an already applied migration; use a subsequent migration for future changes.
+Migration: `supabase/migrations/20261010075402_itcare_initial.sql`. Apply once to a new empty test project. Existing `itcare-dev` already has this verified migration; do not rerun it. The Phase 2 filename was reconciled without SQL/cloud-history changes (see `MIGRATION_HISTORY.md`). Use a subsequent additive migration for future schema changes.
 
 | Table | Identity and relationships | Meaning |
 |---|---|---|

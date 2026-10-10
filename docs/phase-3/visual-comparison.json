@@ -1,0 +1,677 @@
+{
+  "method": "RGB difference >16; dynamic timestamps/content and source screenshot variations are not masked; not a pixel-perfect assertion",
+  "screens": [
+    {
+      "name": "D00-login-1440.png",
+      "sizes": [
+        {
+          "width": 1440,
+          "height": 900
+        },
+        {
+          "width": 1440,
+          "height": 900
+        }
+      ],
+      "changedPercent": 0
+    },
+    {
+      "name": "D01-dark.png",
+      "sizes": [
+        {
+          "width": 1440,
+          "height": 901
+        },
+        {
+          "width": 1440,
+          "height": 901
+        }
+      ],
+      "changedPercent": 0
+    },
+    {
+      "name": "D01-empty-filter.png",
+      "sizes": [
+        {
+          "width": 1440,
+          "height": 901
+        },
+        {
+          "width": 1440,
+          "height": 901
+        }
+      ],
+      "changedPercent": 0.067
+    },
+    {
+      "name": "D01-inbox-1366x768.png",
+      "sizes": [
+        {
+          "width": 1366,
+          "height": 897
+        },
+        {
+          "width": 1366,
+          "height": 897
+        }
+      ],
+      "changedPercent": 0.071
+    },
+    {
+      "name": "D01-inbox-1440.png",
+      "sizes": [
+        {
+          "width": 1440,
+          "height": 901
+        },
+        {
+          "width": 1440,
+          "height": 901
+        }
+      ],
+      "changedPercent": 0
+    },
+    {
+      "name": "D01-inbox-1440x900.png",
+      "sizes": [
+        {
+          "width": 1440,
+          "height": 901
+        },
+        {
+          "width": 1440,
+          "height": 901
+        }
+      ],
+      "changedPercent": 0
+    },
+    {
+      "name": "D01-inbox-375x812.png",
+      "sizes": [
+        {
+          "width": 375,
+          "height": 1122
+        },
+        {
+          "width": 375,
+          "height": 1122
+        }
+      ],
+      "changedPercent": 0
+    },
+    {
+      "name": "D01-inbox-768x1024.png",
+      "sizes": [
+        {
+          "width": 768,
+          "height": 1098
+        },
+        {
+          "width": 768,
+          "height": 1098
+        }
+      ],
+      "changedPercent": 0.103
+    },
+    {
+      "name": "D01-mobile-sidebar-open.png",
+      "sizes": [
+        {
+          "width": 375,
+          "height": 1122
+        },
+        {
+          "width": 375,
+          "height": 1122
+        }
+      ],
+      "changedPercent": 0.192
+    },
+    {
+      "name": "D01-sidebar-collapsed.png",
+      "sizes": [
+        {
+          "width": 1440,
+          "height": 901
+        },
+        {
+          "width": 1440,
+          "height": 901
+        }
+      ],
+      "changedPercent": 0
+    },
+    {
+      "name": "D02-details-1366x768.png",
+      "sizes": [
+        {
+          "width": 1366,
+          "height": 977
+        },
+        {
+          "width": 1366,
+          "height": 977
+        }
+      ],
+      "changedPercent": 0
+    },
+    {
+      "name": "D02-details-1440.png",
+      "sizes": [
+        {
+          "width": 1440,
+          "height": 977
+        },
+        {
+          "width": 1440,
+          "height": 977
+        }
+      ],
+      "changedPercent": 0
+    },
+    {
+      "name": "D02-details-1440x900.png",
+      "sizes": [
+        {
+          "width": 1440,
+          "height": 977
+        },
+        {
+          "width": 1440,
+          "height": 977
+        }
+      ],
+      "changedPercent": 0
+    },
+    {
+      "name": "D02-details-375x812.png",
+      "sizes": [
+        {
+          "width": 375,
+          "height": 1501
+        },
+        {
+          "width": 375,
+          "height": 1501
+        }
+      ],
+      "changedPercent": 0
+    },
+    {
+      "name": "D02-details-768x1024.png",
+      "sizes": [
+        {
+          "width": 768,
+          "height": 1465
+        },
+        {
+          "width": 768,
+          "height": 1465
+        }
+      ],
+      "changedPercent": 0
+    },
+    {
+      "name": "D02-resolved.png",
+      "sizes": [
+        {
+          "width": 1440,
+          "height": 1145
+        },
+        {
+          "width": 1440,
+          "height": 1145
+        }
+      ],
+      "changedPercent": 0.583
+    },
+    {
+      "name": "D03-history-1440.png",
+      "sizes": [
+        {
+          "width": 1440,
+          "height": 901
+        },
+        {
+          "width": 1440,
+          "height": 901
+        }
+      ],
+      "changedPercent": 0.067
+    },
+    {
+      "name": "D04-employees-1440.png",
+      "sizes": [
+        {
+          "width": 1440,
+          "height": 901
+        },
+        {
+          "width": 1440,
+          "height": 901
+        }
+      ],
+      "changedPercent": 0.028
+    },
+    {
+      "name": "M00-login-390.png",
+      "sizes": [
+        {
+          "width": 390,
+          "height": 844
+        },
+        {
+          "width": 390,
+          "height": 844
+        }
+      ],
+      "changedPercent": 0
+    },
+    {
+      "name": "M00-login-error.png",
+      "sizes": [
+        {
+          "width": 390,
+          "height": 844
+        },
+        {
+          "width": 390,
+          "height": 844
+        }
+      ],
+      "changedPercent": 0
+    },
+    {
+      "name": "M01-home-375x812.png",
+      "sizes": [
+        {
+          "width": 375,
+          "height": 1031
+        },
+        {
+          "width": 375,
+          "height": 1031
+        }
+      ],
+      "changedPercent": 0
+    },
+    {
+      "name": "M01-home-390.png",
+      "sizes": [
+        {
+          "width": 390,
+          "height": 1031
+        },
+        {
+          "width": 390,
+          "height": 1031
+        }
+      ],
+      "changedPercent": 0
+    },
+    {
+      "name": "M01-home-390x844.png",
+      "sizes": [
+        {
+          "width": 390,
+          "height": 1031
+        },
+        {
+          "width": 390,
+          "height": 1031
+        }
+      ],
+      "changedPercent": 0
+    },
+    {
+      "name": "M01-home-768x1024.png",
+      "sizes": [
+        {
+          "width": 768,
+          "height": 1024
+        },
+        {
+          "width": 768,
+          "height": 1024
+        }
+      ],
+      "changedPercent": 0
+    },
+    {
+      "name": "M02-photo-preview.png",
+      "sizes": [
+        {
+          "width": 390,
+          "height": 1119
+        },
+        {
+          "width": 390,
+          "height": 1119
+        }
+      ],
+      "changedPercent": 0
+    },
+    {
+      "name": "M02-report-375x812.png",
+      "sizes": [
+        {
+          "width": 375,
+          "height": 939
+        },
+        {
+          "width": 375,
+          "height": 939
+        }
+      ],
+      "changedPercent": 0
+    },
+    {
+      "name": "M02-report-390.png",
+      "sizes": [
+        {
+          "width": 390,
+          "height": 939
+        },
+        {
+          "width": 390,
+          "height": 939
+        }
+      ],
+      "changedPercent": 0
+    },
+    {
+      "name": "M02-report-390x844.png",
+      "sizes": [
+        {
+          "width": 390,
+          "height": 939
+        },
+        {
+          "width": 390,
+          "height": 939
+        }
+      ],
+      "changedPercent": 0
+    },
+    {
+      "name": "M02-report-768x1024.png",
+      "sizes": [
+        {
+          "width": 768,
+          "height": 1024
+        },
+        {
+          "width": 768,
+          "height": 1024
+        }
+      ],
+      "changedPercent": 0
+    },
+    {
+      "name": "M02-submission-error.png",
+      "sizes": [
+        {
+          "width": 390,
+          "height": 1003
+        },
+        {
+          "width": 390,
+          "height": 983
+        }
+      ],
+      "changedPercent": null
+    },
+    {
+      "name": "M02-submission-loading.png",
+      "sizes": [
+        {
+          "width": 390,
+          "height": 1119
+        },
+        {
+          "width": 390,
+          "height": 1119
+        }
+      ],
+      "changedPercent": 0
+    },
+    {
+      "name": "M02-submit-visible-375.png",
+      "sizes": [
+        {
+          "width": 375,
+          "height": 812
+        },
+        {
+          "width": 375,
+          "height": 812
+        }
+      ],
+      "changedPercent": 0
+    },
+    {
+      "name": "M02-submit-visible-390.png",
+      "sizes": [
+        {
+          "width": 390,
+          "height": 844
+        },
+        {
+          "width": 390,
+          "height": 844
+        }
+      ],
+      "changedPercent": 0
+    },
+    {
+      "name": "M02-submit-visible-768.png",
+      "sizes": [
+        {
+          "width": 768,
+          "height": 1024
+        },
+        {
+          "width": 768,
+          "height": 1024
+        }
+      ],
+      "changedPercent": 0
+    },
+    {
+      "name": "M02-validation-error.png",
+      "sizes": [
+        {
+          "width": 390,
+          "height": 983
+        },
+        {
+          "width": 390,
+          "height": 983
+        }
+      ],
+      "changedPercent": 0
+    },
+    {
+      "name": "M03-result-390.png",
+      "sizes": [
+        {
+          "width": 390,
+          "height": 844
+        },
+        {
+          "width": 390,
+          "height": 844
+        }
+      ],
+      "changedPercent": 0.178
+    },
+    {
+      "name": "M04-data-error.png",
+      "sizes": [
+        {
+          "width": 390,
+          "height": 844
+        },
+        {
+          "width": 390,
+          "height": 844
+        }
+      ],
+      "changedPercent": 0
+    },
+    {
+      "name": "M04-empty.png",
+      "sizes": [
+        {
+          "width": 390,
+          "height": 844
+        },
+        {
+          "width": 390,
+          "height": 844
+        }
+      ],
+      "changedPercent": 0
+    },
+    {
+      "name": "M04-requests-375x812.png",
+      "sizes": [
+        {
+          "width": 375,
+          "height": 812
+        },
+        {
+          "width": 375,
+          "height": 812
+        }
+      ],
+      "changedPercent": 0
+    },
+    {
+      "name": "M04-requests-390.png",
+      "sizes": [
+        {
+          "width": 390,
+          "height": 844
+        },
+        {
+          "width": 390,
+          "height": 844
+        }
+      ],
+      "changedPercent": 0.139
+    },
+    {
+      "name": "M04-requests-390x844.png",
+      "sizes": [
+        {
+          "width": 390,
+          "height": 844
+        },
+        {
+          "width": 390,
+          "height": 844
+        }
+      ],
+      "changedPercent": 0
+    },
+    {
+      "name": "M04-requests-768x1024.png",
+      "sizes": [
+        {
+          "width": 768,
+          "height": 1024
+        },
+        {
+          "width": 768,
+          "height": 1024
+        }
+      ],
+      "changedPercent": 0
+    },
+    {
+      "name": "M05-details-375x812.png",
+      "sizes": [
+        {
+          "width": 375,
+          "height": 1005
+        },
+        {
+          "width": 375,
+          "height": 1005
+        }
+      ],
+      "changedPercent": 0.82
+    },
+    {
+      "name": "M05-details-390x844.png",
+      "sizes": [
+        {
+          "width": 390,
+          "height": 1005
+        },
+        {
+          "width": 390,
+          "height": 1005
+        }
+      ],
+      "changedPercent": 0.732
+    },
+    {
+      "name": "M05-details-768x1024.png",
+      "sizes": [
+        {
+          "width": 768,
+          "height": 1024
+        },
+        {
+          "width": 768,
+          "height": 1024
+        }
+      ],
+      "changedPercent": 0.562
+    },
+    {
+      "name": "M05-details-photo-390.png",
+      "sizes": [
+        {
+          "width": 390,
+          "height": 1179
+        },
+        {
+          "width": 390,
+          "height": 1179
+        }
+      ],
+      "changedPercent": 0.992
+    },
+    {
+      "name": "reference-source-login-1440.png",
+      "sizes": [
+        {
+          "width": 1440,
+          "height": 900
+        },
+        {
+          "width": 1440,
+          "height": 900
+        }
+      ],
+      "changedPercent": 0
+    },
+    {
+      "name": "reference-source-tickets-1440.png",
+      "sizes": [
+        {
+          "width": 1440,
+          "height": 1035
+        },
+        {
+          "width": 1440,
+          "height": 1035
+        }
+      ],
+      "changedPercent": 2.047
+    }
+  ]
+}

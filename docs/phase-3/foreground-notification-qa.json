@@ -1,0 +1,11 @@
+{
+  "browserAPI": "PASSED",
+  "physicalOSDelivery": "NOT TESTED",
+  "backgroundPush": "BLOCKED",
+  "observedCount": 1,
+  "titleMatches": true,
+  "bodyMatches": true,
+  "genericPayload": true,
+  "reloadDeduplication": true,
+  "passed": true
+}

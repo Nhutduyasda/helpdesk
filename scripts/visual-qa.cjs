@@ -7,7 +7,7 @@ const assert = require('node:assert/strict');
 const path = require('node:path');
 const out = path.resolve(process.env.QA_OUTPUT || 'docs/screenshots');
 fs.mkdirSync(out, { recursive: true });
-const base = 'http://127.0.0.1:5174';
+const base = process.env.QA_BASE_URL || 'http://127.0.0.1:5174';
 const report = { screens: [], checks: [], errors: [] };
 (async () => {
   const browser = await chromium.launch({ channel: 'msedge', headless: true });

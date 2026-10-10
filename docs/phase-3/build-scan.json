@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "jsFiles": 99,
+  "checks": [
+    "No demo credential/session shortcut",
+    "No secret key pattern",
+    "No configured server/test credential values"
+  ],
+  "publicSupabaseConfigExpected": true
+}

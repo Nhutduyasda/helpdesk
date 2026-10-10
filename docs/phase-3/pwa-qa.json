@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "manifest": true,
+  "iconSizes": true,
+  "serviceWorker": true,
+  "privateCacheEntries": 0,
+  "offlineNavigation": true,
+  "installabilityErrors": [
+    {
+      "errorId": "in-incognito",
+      "errorArguments": []
+    }
+  ],
+  "physicalAndroid": "NOT TESTED",
+  "physicalIPhone": "NOT TESTED",
+  "realHomeScreenInstallation": "NOT TESTED"
+}

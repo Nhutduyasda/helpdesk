@@ -1,0 +1,8 @@
+select jsonb_build_object(
+ 'constraints',(select md5(string_agg(c.relname||':'||k.conname||':'||pg_get_constraintdef(k.oid),E'\n' order by c.relname,k.conname)) from pg_constraint k join pg_class c on c.oid=k.conrelid join pg_namespace n on n.oid=c.relnamespace where k.contype<>'n' and n.nspname='public' and c.relname in ('profiles','tickets','ticket_attachments','ticket_comments','ticket_events')),
+ 'columns',(select md5(string_agg(table_name||':'||column_name||':'||udt_name||':'||is_nullable||':'||coalesce(column_default,''),E'\n' order by table_name,ordinal_position)) from information_schema.columns where table_schema='public' and table_name in ('profiles','tickets','ticket_attachments','ticket_comments','ticket_events')),
+ 'functions',(select md5(string_agg(n.nspname||'.'||p.proname||':'||regexp_replace(p.prosrc,'\s','','g'),E'\n' order by n.nspname,p.proname)) from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='itcare_private' or (n.nspname='public' and p.proname in ('prepare_ticket','finalize_ticket','update_ticket','set_employee_active'))),
+ 'policies',(select md5(string_agg(schemaname||'.'||tablename||':'||policyname||':'||cmd||':'||coalesce(qual,'')||':'||coalesce(with_check,''),E'\n' order by schemaname,tablename,policyname)) from pg_policies where (schemaname='public' and tablename in ('profiles','tickets','ticket_attachments','ticket_comments','ticket_events')) or (schemaname='storage' and policyname like 'itcare%')),
+ 'enums',(select md5(string_agg(t.typname||':'||e.enumlabel,E'\n' order by t.typname,e.enumsortorder)) from pg_enum e join pg_type t on t.oid=e.enumtypid where t.typname in ('ticket_status','support_method'))
+) as digest;
+

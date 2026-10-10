@@ -16,6 +16,7 @@ import LightDark from "./Light-Dark";
 import Notifications from "./Notifications";
 import { useLocation } from 'react-router';
 import { useCare } from '@/context/itcare';
+import NotificationBell from '@/views/itcare/NotificationBell';
 
 
 const Header = () => {
@@ -73,6 +74,7 @@ const Header = () => {
 
               {/* Notifications Dropdown */}
               {!care && <Notifications className="sm:block hidden" />}
+              {care && <NotificationBell />}
 
            
 

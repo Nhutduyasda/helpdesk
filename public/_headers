@@ -1,0 +1,13 @@
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: no-referrer
+  X-Frame-Options: DENY
+  Permissions-Policy: camera=(self), microphone=(), geolocation=()
+  Cache-Control: no-store
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://agcoboeswdvnumzyrtbu.supabase.co; connect-src 'self' https://agcoboeswdvnumzyrtbu.supabase.co wss://agcoboeswdvnumzyrtbu.supabase.co; font-src 'self'; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'
+
+/manifest.webmanifest
+  Content-Type: application/manifest+json
+
+/itcare-sw.js
+  Service-Worker-Allowed: /

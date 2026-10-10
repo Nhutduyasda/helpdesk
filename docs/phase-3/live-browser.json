@@ -1,0 +1,38 @@
+{
+  "checks": [
+    {
+      "name": "employee login",
+      "status": "PASSED"
+    },
+    {
+      "name": "invalid and oversized images",
+      "status": "PASSED"
+    },
+    {
+      "name": "offline form retained",
+      "status": "PASSED"
+    },
+    {
+      "name": "interrupted upload retry",
+      "status": "PASSED"
+    },
+    {
+      "name": "successful retry and persistence",
+      "status": "PASSED"
+    },
+    {
+      "name": "Authorized private image decodes in browser after refresh",
+      "status": "PASSED"
+    },
+    {
+      "name": "B direct UI denied",
+      "status": "PASSED"
+    },
+    {
+      "name": "logout protected route",
+      "status": "PASSED"
+    }
+  ],
+  "exceptions": 0,
+  "passed": true
+}
