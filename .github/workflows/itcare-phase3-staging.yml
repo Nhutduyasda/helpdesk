@@ -1,0 +1,109 @@
+name: ITCare Phase 3 staging candidate
+
+on:
+  push:
+    branches:
+      - phase-3-final-completion
+  pull_request:
+    branches:
+      - phase-3-notifications-staging
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: itcare-phase3-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Test and build staging candidate
+    runs-on: ubuntu-latest
+    env:
+      VITE_SUPABASE_URL: ${{ vars.ITCARE_SUPABASE_URL }}
+      VITE_SUPABASE_PUBLISHABLE_KEY: ${{ vars.ITCARE_SUPABASE_PUBLISHABLE_KEY }}
+      VITE_ITCARE_DEMO: 'false'
+    steps:
+      - name: Checkout exact revision
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Run unit, SQL and notification tests
+        run: npm test
+      - name: Lint ITCare application
+        run: npm run lint:itcare
+      - name: Check high-severity dependency alerts
+        run: npm audit --audit-level=high
+      - name: Verify configuration when deployment is enabled
+        if: vars.ITCARE_STAGING_DEPLOY_ENABLED == 'true'
+        shell: bash
+        run: |
+          if [[ "$VITE_SUPABASE_URL" != "https://agcoboeswdvnumzyrtbu.supabase.co" ]]; then
+            echo "::error::Set ITCARE_SUPABASE_URL to the authorized itcare-dev project URL."
+            exit 1
+          fi
+          if [[ "$VITE_SUPABASE_PUBLISHABLE_KEY" != sb_publishable_* || "$VITE_SUPABASE_PUBLISHABLE_KEY" == *REPLACE* ]]; then
+            echo "::error::Set ITCARE_SUPABASE_PUBLISHABLE_KEY to the test project's publishable key."
+            exit 1
+          fi
+      - name: Build without demo credentials
+        run: npm run build
+      - name: Scan distributable for private values
+        run: node scripts/scan-build.mjs
+      - name: Store verified build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: itcare-phase3-staging-candidate
+          path: dist/
+          if-no-files-found: error
+          retention-days: 7
+
+  deploy-preview:
+    name: Deploy gated Cloudflare Pages preview
+    needs: verify
+    if: github.event_name == 'push' && vars.ITCARE_STAGING_DEPLOY_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    env:
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+    steps:
+      - name: Download tested build
+        uses: actions/download-artifact@v4
+        with:
+          name: itcare-phase3-staging-candidate
+          path: dist/
+      - name: Verify Cloudflare project is preview-only
+        shell: bash
+        run: |
+          if [[ -z "$CLOUDFLARE_ACCOUNT_ID" || -z "$CLOUDFLARE_API_TOKEN" ]]; then
+            echo "::error::Cloudflare account ID and Pages API token must be configured as Actions secrets."
+            exit 1
+          fi
+          response="$(curl --fail --silent --show-error \
+            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/itcare-staging")"
+          if ! echo "$response" | jq -e '.success == true' >/dev/null; then
+            echo "::error::Cloudflare Pages project itcare-staging could not be verified."
+            exit 1
+          fi
+          production_branch="$(echo "$response" | jq -r '.result.production_branch // empty')"
+          if [[ -z "$production_branch" || "$production_branch" == "itcare-preview" ]]; then
+            echo "::error::The intended preview branch is not isolated from the Cloudflare production branch."
+            exit 1
+          fi
+      - name: Publish preview branch only
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=itcare-staging --branch=itcare-preview
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
