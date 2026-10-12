@@ -1,0 +1,28 @@
+{
+  "passed": true,
+  "scope": "Local Vite HTTP and worker VM; no browser, HTTPS staging or authenticated UI claims",
+  "checks": [
+    {
+      "path": "/login",
+      "passed": true,
+      "scope": "local SPA fallback only"
+    },
+    {
+      "path": "/employee/report",
+      "passed": true,
+      "scope": "local SPA fallback only"
+    },
+    {
+      "path": "/it/tickets/ITC-SYNTHETIC",
+      "passed": true,
+      "scope": "local SPA fallback only"
+    }
+  ],
+  "manifest": true,
+  "iconDimensions": true,
+  "workerPrivateCacheExclusion": true,
+  "privateCacheWrites": 0,
+  "offlineNavigationVM": true,
+  "physicalAndroid": "NOT TESTED",
+  "physicalIPhone": "NOT TESTED"
+}

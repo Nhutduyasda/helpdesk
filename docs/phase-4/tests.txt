@@ -1,0 +1,41 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> shadcn-dashboard-free@1.0.0 test
+> node --experimental-strip-types --test tests/*.test.mjs
+
+✔ build gate rejects legacy service-role JWT without printing its value (34.972293ms)
+✔ build gate scans HTML, maps and nested assets, not only top-level JS (27.159156ms)
+✔ build gate catches private values even when incorrectly VITE-prefixed (19.331158ms)
+✔ build gate allows public publishable and legacy anon keys (6.019652ms)
+✔ A: employee reads own submitted ticket but not another employee draft (8138.449365ms)
+✔ B: reserved upload path is private and rejects guessed/cross-owner uploads (56.054075ms)
+✔ C/D/J: browser cannot change ownership, status, role, history or disable accounts directly (36.652732ms)
+✔ E: inactive user cannot query business data or invoke mutations (12.962225ms)
+✔ F/M: IT can read all submitted tickets and update atomically; comments/events obey ownership (64.203099ms)
+✔ G: unauthenticated roles have no table/RPC access (6.607062ms)
+✔ H: repeated request IDs and operation IDs do not duplicate records (39.542ms)
+✔ I: missing upload or wrong MIME/size cannot finalize; retry remains a draft (35.217675ms)
+✔ failed IT mutation rolls back comment and history; resolve then closed is read-only (34.960207ms)
+✔ account deactivation is enforced immediately even with an existing user identity (15.727733ms)
+✔ private bucket, size/type limits and all business tables have RLS enabled (6.22549ms)
+✔ A: other employee submitted ticket is hidden, not just their draft (5.248789ms)
+✔ metadata cannot provision IT privileges; distinct requests have unique server numbers (111.64793ms)
+✔ Storage duplicate 400/409 allows immutable retry to continue to verified finalization (3.691477ms)
+✔ Storage rejects permission, MIME and network errors without masking them as retries (2.777285ms)
+✔ notification recipient matrix: IT receives new ticket, A receives IT reply/resolution, B receives none (14.97477ms)
+✔ inactive recipients and draft tickets receive no notifications (0.621806ms)
+✔ browser QA uses available Chromium on Linux and retains Edge on Windows (4.627819ms)
+✔ QA_OUTPUT isolates new staging evidence from historical Phase 3 output (3.176466ms)
+✔ upload failure never finalizes, retry reuses reservation and only metadata reaches database (34.197258ms)
+✔ already submitted retry skips uploads and finalization (0.551231ms)
+✔ file count, spoofed image bytes and invalid formats rejected before writes (0.999541ms)
+✔ update uses database identity and stable internal status codes, never a browser actor (1.850186ms)
+✔ configuration rejects placeholders, insecure remote URLs and privileged JWTs (1.087735ms)
+ℹ tests 28
+ℹ suites 0
+ℹ pass 28
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 9325.662053

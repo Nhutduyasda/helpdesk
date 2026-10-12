@@ -1,0 +1,12 @@
+{
+  "project": "agcoboeswdvnumzyrtbu",
+  "mode": "live",
+  "checks": [
+    {
+      "name": "configuration",
+      "status": "FAILED"
+    }
+  ],
+  "exceptions": 0,
+  "passed": false
+}

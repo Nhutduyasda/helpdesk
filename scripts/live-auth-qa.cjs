@@ -1,10 +1,12 @@
-const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'C:/Users/nhutd/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const { browserOptions, outputDirectory, playwright } = require('./qa-runtime.cjs');
+const { chromium } = playwright();
+const qaOutput = outputDirectory();
 const fs = require('node:fs');
 const assert = require('node:assert/strict');
 (async () => {
   const { loadEnv } = await import('vite');
   const env = loadEnv('development', process.cwd(), '');
-  const out = 'docs/phase-3';
+  const out = qaOutput;
   fs.mkdirSync(out + '/screenshots', { recursive: true });
   const report = { project: 'agcoboeswdvnumzyrtbu', mode: 'live', checks: [], exceptions: 0 };
   let browser;
@@ -12,7 +14,7 @@ const assert = require('node:assert/strict');
   try {
     assert(new URL(env.VITE_SUPABASE_URL).hostname === 'agcoboeswdvnumzyrtbu.supabase.co');
     assert(env.ITCARE_TEST_IT_EMAIL && env.ITCARE_TEST_IT_PASSWORD);
-    browser = await chromium.launch({ channel: 'msedge', headless: true });
+    browser = await chromium.launch(browserOptions());
     const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
     page.on('pageerror', () => report.exceptions++);
     const base = process.env.LIVE_QA_URL || 'http://127.0.0.1:5174';
