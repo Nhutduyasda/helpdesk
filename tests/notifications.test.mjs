@@ -15,6 +15,13 @@ test('notification recipient matrix: IT receives new ticket, A receives IT reply
  assert.deepEqual(notificationItems(events,tickets,profiles,'b'),[]);
  assert(!JSON.stringify(notificationItems(events,tickets,profiles,'a')).includes('PRIVATE REPLY'));
 });
+test('public submission with no profile actor notifies IT only',()=>{
+ const publicTickets=[{...tickets[0],employee_id:null}];
+ const publicEvents=[{...events[0],actor_id:null}];
+ assert.deepEqual(notificationItems(publicEvents,publicTickets,profiles,'it').map(x=>x.id),['1']);
+ assert.deepEqual(notificationItems(publicEvents,publicTickets,profiles,'a'),[]);
+ assert.deepEqual(notificationItems(publicEvents,publicTickets,profiles,'b'),[]);
+});
 test('inactive recipients and draft tickets receive no notifications',()=>{
  assert.deepEqual(notificationItems(events,tickets,profiles.map(p=>({...p,active:false})),'it'),[]);
  assert.deepEqual(notificationItems(events,tickets.map(t=>({...t,submitted_at:null})),profiles,'it'),[]);

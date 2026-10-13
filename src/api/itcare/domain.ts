@@ -27,6 +27,8 @@ export type Incident = {
   id: string;
   databaseId?: string;
   employeeId: string;
+  reporter?: { name: string; department: string };
+  location?: string;
   description: string;
   photos: string[];
   created: string;

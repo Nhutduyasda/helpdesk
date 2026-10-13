@@ -63,7 +63,7 @@ export function Inbox() {
   const [department, setDepartment] = useState('Tous');
   const history = useLocation().pathname.endsWith('history');
   const visible = tickets.filter((t) => {
-    const employee = employees.find((e) => e.id === t.employeeId);
+    const employee = (t.reporter || employees.find((e) => e.id === t.employeeId));
     return (
       (status === 'Tous' || t.status === status) &&
       (department === 'Tous' || employee?.department === department) &&
@@ -146,7 +146,7 @@ export function Inbox() {
               <Filter
                 label="Tất cả phòng ban"
                 value={department}
-                values={['Kế toán', 'Xuất nhập khẩu', 'Kho', 'HSE']}
+                values={Array.from(new Set([...employees.map(e => e.department), ...tickets.map(t => t.reporter?.department || '')])).filter(Boolean)}
                 change={setDepartment}
               />
             </div>
@@ -159,7 +159,7 @@ export function Inbox() {
                 data={visible.map((t) => ({
                   'Mã yêu cầu': t.id,
                   'Nội dung': t.description,
-                  'Nhân viên': employees.find((e) => e.id === t.employeeId)?.name,
+                  'Nhân viên': t.reporter ? `${t.reporter.name} (tự khai)` : employees.find((e) => e.id === t.employeeId)?.name,
                   'Ngày sự cố': dateText(t.created),
                   'Trạng thái': t.status,
                   'Kết quả': t.resolution || 'Chưa giải quyết',
@@ -195,7 +195,7 @@ export function Inbox() {
                 </TableHeader>
                 <TableBody>
                   {visible.map((t) => {
-                    const employee = employees.find((e) => e.id === t.employeeId);
+                    const employee = (t.reporter || employees.find((e) => e.id === t.employeeId));
                     return (
                       <TableRow key={t.id}>
                         <TableCell>{t.id}</TableCell>
@@ -213,6 +213,7 @@ export function Inbox() {
                               <AvatarFallback>{employee?.name.charAt(0)}</AvatarFallback>
                             </Avatar>
                             {employee?.name}
+                            {t.reporter && <span className="text-xs text-muted-foreground">Tự khai</span>}
                           </div>
                         </TableCell>
                         <TableCell className="whitespace-nowrap">{employee?.department}</TableCell>
@@ -248,6 +249,11 @@ export function Inbox() {
 }
 export function Details() {
   const { id } = useParams();
+  // Keep drafts and operation refs for refreshes of one ticket, but isolate navigation.
+  return <TicketDetails key={id} />;
+}
+function TicketDetails() {
+  const { id } = useParams();
   const { tickets, employees, user, update, loading, error: dataError, demo } = useCare();
   const [reply, setReply] = useState('');
   const operation = useRef<{ payload: string; id: string } | null>(null);
@@ -257,7 +263,7 @@ export function Details() {
   const [error, setError] = useState('');
   const it = user?.role === 'it';
   const ticket = tickets.find((t) => t.id === id && (it || t.employeeId === user?.id));
-  const employee = employees.find((e) => e.id === ticket?.employeeId);
+  const employee = (ticket?.reporter || employees.find((e) => e.id === ticket?.employeeId));
   async function action(input: {
     status?: Status;
     method?: string;
@@ -311,6 +317,8 @@ export function Details() {
                 <p className="text-sm text-muted-foreground">
                   {employee?.name} · {employee?.department}
                 </p>
+                {ticket.reporter && <p className="text-sm text-muted-foreground">Thông tin người gửi tự khai · Chưa xác minh</p>}
+                {ticket.location && <p className="break-words">Vị trí: {ticket.location}</p>}
                 <p className="whitespace-pre-wrap break-words">{ticket.description}</p>
                 {ticket.photos.length ? (
                   <div className="grid gap-3 sm:grid-cols-2">

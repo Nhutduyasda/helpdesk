@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "checks": [
+    "Same-ticket data refresh preserves both unsaved drafts",
+    "A → B → A resets drafts and prevents stale-resolution submission",
+    "Pending A success cannot clear B draft/unlock B; B retry preserves operation ID",
+    "Late failure cannot set another ticket error; navigation clears error and operation refs"
+  ],
+  "backend": "synthetic context; actual React component and browser"
+}

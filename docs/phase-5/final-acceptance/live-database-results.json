@@ -1,0 +1,34 @@
+{
+  "date": "2026-10-13",
+  "project": "praluwpaundvwmifaije",
+  "passed": true,
+  "method": "Supabase execute_sql, actual PostgreSQL role/claim tests, transaction rollback",
+  "checks": [
+    "Inactive IT business-data reads and ticket/account mutations denied",
+    "Active non-IT public-report/Admin-list reads and IT mutations denied",
+    "Anon table and IT RPC access denied",
+    "Anon private storage object visibility denied; one object exists and bucket is private",
+    "Sequential identical reservation retry succeeds at last admission slot without another admission",
+    "Distinct reservation beyond simulated capacity rejected without counter growth",
+    "Finalization retry creates one submission event",
+    "Active IT acknowledge/remote/reply/wait/resolve/close and closed-write denial"
+  ],
+  "preservedAfterRollback": {
+    "tickets": 2,
+    "profiles": 1,
+    "activeIt": 1,
+    "syntheticIdentities": 0,
+    "syntheticReservations": 0,
+    "verifiedHourlyAdmissions": 2
+  },
+  "sideEffect": "Ticket-number sequence can advance for a rolled-back reservation; no sequence reset",
+  "notProven": [
+    "Consumed genuine Turnstile token replay",
+    "Fresh-token HTTP retry",
+    "Simultaneous requests at capacity across transactions/Edge instances",
+    "Expired signed URL refusal",
+    "Real inactive/non-IT Auth session/browser denial",
+    "New fixed commit deployed end-to-end",
+    "Direct-origin upstream abuse protection"
+  ]
+}

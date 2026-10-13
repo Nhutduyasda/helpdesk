@@ -1,0 +1,12 @@
+{
+  "date": "2026-10-13",
+  "method": "Read-only authenticated GitHub REST API; credentials retained only in process memory",
+  "ITCARE_PHASE5_DEPLOY_ENABLED": "false",
+  "ITCARE_PHASE5_APPROVED_SHA": "absent",
+  "ITCARE_PHASE5_DEPLOY_APPROVAL": "absent",
+  "environment": "itcare-phase5-preview",
+  "requiredReviewer": "Nhutduyasda",
+  "preventSelfReview": false,
+  "allowedBranch": "codex/phase-5-preview-request",
+  "variablesOrRequestRefChanged": false
+}

@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 
 export async function scanBuild(directory, env = {}) {
   const privateValues = Object.entries(env)
-    .filter(([key, value]) => value && /ITCARE_TEST_|VAPID_PRIVATE|SERVICE_ROLE|SUPABASE_SECRET|CLOUDFLARE_/.test(key))
+    .filter(([key, value]) => value && /ITCARE_TEST_|VAPID_PRIVATE|SERVICE_ROLE|SUPABASE_SECRET|CLOUDFLARE_|TURNSTILE_SECRET|INTAKE_RATE_SECRET/.test(key))
     .map(([, value]) => value);
   let filesScanned = 0;
   let jsFiles = 0;
