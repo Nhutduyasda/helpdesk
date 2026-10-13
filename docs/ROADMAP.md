@@ -1,5 +1,11 @@
 # Review gate and next phases
 
+## Phase 6 — IN DEVELOPMENT — 2026-10-13
+
+Phase 6 starts on `codex/phase-6-operational-readiness` at verified Phase 5 SHA `8232ab0ede155fb9f73f4d5ff70ac4387ee17ac4`. See [Phase 6 audit and plan](phase-6/README.md). Architecture/operations/pilot planning and a synthetic replay regression are reviewable; security-ingress implementation and cloud changes await separate owner approval. Phase 4 and Phase 5 staging remain preserved; no main merge, deployment, migration, DNS change, paid upgrade, data deletion or invitations are authorized.
+
+**Phase 5 public employee pilot remains NO-GO:** direct anonymous Supabase intake execution; missing genuine-token replay and fresh-token HTTP idempotency; unverified simultaneous admission and current signed-URL expired HTTP response; incomplete hosted mobile/desktop acceptance; unapproved backup/retention/recovery/contact procedures; Free-plan leaked-password limitation. Prior genuine submission, IT lifecycle and inactive/non-IT denial evidence do not close these gates. Retain ITC-1004 and both QA Auth identities until explicit cleanup permission. Phase 6 start is not Phase 5 security acceptance.
+
 ## Phase 4 current gate — 2026-10-12
 
 Repository baseline and current read-only Supabase controls verified. Scanner/staging-QA portability fixes are scoped to the stacked Phase 4 branch. HTTPS staging and independent authenticated A/B/IT acceptance remain BLOCKED; physical-device cases are NOT TESTED. **NO-GO for employee pilot** until those and operational prerequisites pass. See `PHASE_4_STAGING_REPORT.md` and `PHASE_4_PILOT_CHECKLIST.md`. No background push feature, main merge, production deployment or real onboarding is authorized by this status.

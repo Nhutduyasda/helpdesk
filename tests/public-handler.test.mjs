@@ -71,6 +71,31 @@ const verify = async () =>
     hostname: "office.test",
     action: "incident-report",
   });
+test("consumed challenge is rejected before reservation; fresh challenge permits same-request retry (mock verifier)", async () => {
+  const client = gateway(), id = crypto.randomUUID(), consumed = new Set();
+  const singleUseVerifier = async (_url, options) => {
+    const token = options.body.get("response");
+    if (consumed.has(token)) return Response.json({ success: false, "error-codes": ["timeout-or-duplicate"] });
+    consumed.add(token);
+    return verify();
+  };
+  const handler = intakeHandler(client, env, singleUseVerifier);
+  const first = await handler(request({ requestId: id, token: "first" }));
+  assert.equal(first.status, 200);
+  assert.deepEqual(await first.json(), { ticketNumber: "ITC-QA" });
+  const callsBeforeReplay = client.calls.filter(c => c.name === "prepare_public_ticket").length;
+  const replay = await handler(request({ requestId: id, token: "first" }));
+  assert.equal(replay.status, 400);
+  assert.deepEqual(await replay.json(), { error: "verification" });
+  assert.equal(client.calls.filter(c => c.name === "prepare_public_ticket").length, callsBeforeReplay);
+  const retry = await handler(request({ requestId: id, token: "fresh" }));
+  assert.equal(retry.status, 200);
+  assert.deepEqual(await retry.json(), { ticketNumber: "ITC-QA" });
+  const reservations = client.calls.filter(c => c.name === "prepare_public_ticket");
+  assert.equal(reservations.length, 2);
+  assert.equal(reservations[0].args.p_request_id, reservations[1].args.p_request_id);
+  assert.equal(reservations[0].args.p_hash, reservations[1].args.p_hash);
+});
 test("handler returns only reference, private immutable images survive response-loss retries", async () => {
   const client = gateway(),
     handler = intakeHandler(client, env, verify),
