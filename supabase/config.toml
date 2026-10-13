@@ -4,5 +4,8 @@ enabled = true
 site_url = "http://127.0.0.1:5174"
 additional_redirect_urls = ["http://localhost:5174"]
 enable_signup = false
+
+[functions.public-intake]
+verify_jwt = false
 [auth.email]
 enable_signup = false

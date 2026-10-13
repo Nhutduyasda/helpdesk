@@ -58,6 +58,11 @@ before(async () => {
       { content_type: 'image/png', file_size: 10, sha256: 'a'.repeat(64) },
     ]),
   );
+  const snapshotSQL = `select jsonb_build_object('tickets',(select jsonb_agg(to_jsonb(t)-array['reporter_name','reporter_department','reporter_location'] order by id) from public.tickets t),'attachments',(select jsonb_agg(to_jsonb(a) order by id) from public.ticket_attachments a),'events',(select jsonb_agg(to_jsonb(e) order by id) from public.ticket_events e),'profiles',(select jsonb_agg(to_jsonb(p) order by id) from public.profiles p)) as snapshot`;
+  const beforeMigration = (await db.query(snapshotSQL)).rows[0].snapshot;
+  await db.exec(await readFile(new URL('../supabase/migrations/20261013023844_public_incident_intake.sql', import.meta.url), 'utf8'));
+  const afterMigration = (await db.query(snapshotSQL)).rows[0].snapshot;
+  assert.deepEqual(afterMigration, beforeMigration, 'Additive migration preserves every existing row value');
 });
 after(() => db.close());
 test('A: employee reads own submitted ticket but not another employee draft', async () => {
@@ -129,14 +134,14 @@ test('E: inactive user cannot query business data or invoke mutations', async ()
     /inactive/,
   );
 });
-test('F/M: IT can read all submitted tickets and update atomically; comments/events obey ownership', async () => {
+test('F/M: IT can read all submitted tickets and update atomically; comments/events are IT-only', async () => {
   assert.equal((await asUser(it, () => db.query('select * from public.tickets'))).rows.length, 2);
   await asUser(it, () => change(ticketA.id, { status: 'acknowledged', reply: 'IT received' }));
   await asUser(it, () => change(ticketA.id, { status: 'in_progress', support_method: 'remote' }));
-  await asUser(a, () => change(ticketA.id, { reply: 'Thank you' }));
+  await assert.rejects(asUser(a, () => change(ticketA.id, { reply: 'Thank you' })), /IT role required/);
   assert.equal(
     (await asUser(a, () => db.query('select * from public.ticket_comments'))).rows.length,
-    2,
+    0,
   );
   assert.equal(
     (await asUser(b, () => db.query('select * from public.ticket_comments'))).rows.length,
@@ -171,11 +176,11 @@ test('H: repeated request IDs and operation IDs do not duplicate records', async
     /content changed/,
   );
   const op = crypto.randomUUID();
-  await asUser(a, () => change(ticketA.id, { reply: 'Once only' }, op));
-  await asUser(a, () => change(ticketA.id, { reply: 'Once only' }, op));
+  await asUser(it, () => change(ticketA.id, { reply: 'Once only' }, op));
+  await asUser(it, () => change(ticketA.id, { reply: 'Once only' }, op));
   assert.equal(
     (
-      await asUser(a, () =>
+      await asUser(it, () =>
         db.query("select * from public.ticket_comments where message='Once only'"),
       )
     ).rows.length,
@@ -220,7 +225,7 @@ test('I: missing upload or wrong MIME/size cannot finalize; retry remains a draf
 });
 test('failed IT mutation rolls back comment and history; resolve then closed is read-only', async () => {
   const before = (
-    await asUser(a, () =>
+    await asUser(it, () =>
       db.query('select * from public.ticket_events where ticket_id=$1', [ticketA.id]),
     )
   ).rows.length;
@@ -230,7 +235,7 @@ test('failed IT mutation rolls back comment and history; resolve then closed is 
   );
   assert.equal(
     (
-      await asUser(a, () =>
+      await asUser(it, () =>
         db.query("select * from public.ticket_comments where message='Must rollback'"),
       )
     ).rows.length,
@@ -238,7 +243,7 @@ test('failed IT mutation rolls back comment and history; resolve then closed is 
   );
   assert.equal(
     (
-      await asUser(a, () =>
+      await asUser(it, () =>
         db.query('select * from public.ticket_events where ticket_id=$1', [ticketA.id]),
       )
     ).rows.length,
@@ -249,7 +254,7 @@ test('failed IT mutation rolls back comment and history; resolve then closed is 
   );
   await asUser(it, () => change(ticketA.id, { status: 'closed' }));
   await assert.rejects(
-    asUser(a, () => change(ticketA.id, { reply: 'Closed reply' })),
+    asUser(it, () => change(ticketA.id, { reply: 'Closed reply' })),
     /read-only/,
   );
   await assert.rejects(
@@ -263,7 +268,7 @@ test('account deactivation is enforced immediately even with an existing user id
   assert.equal((await asUser(b, () => db.query('select * from storage.objects'))).rows.length, 0);
   await assert.rejects(
     asUser(b, () => change(ticketB.id, { reply: 'denied' })),
-    /Not authorized/,
+    /Not authorized|IT role required/,
   );
 });
 test('private bucket, size/type limits and all business tables have RLS enabled', async () => {
@@ -289,4 +294,50 @@ test('metadata cannot provision IT privileges; distinct requests have unique ser
   const first=await asUser(a,()=>prepare('Distinct request 1'));
   const second=await asUser(a,()=>prepare('Distinct request 2'));
   assert.notEqual(first.id,second.id);assert.notEqual(first.ticket_number,second.ticket_number);
+});
+
+const publicRequest = crypto.randomUUID(), publicHash = 'b'.repeat(64);
+let publicTicket;
+async function publicPrepare(id=publicRequest,hash=publicHash,files=[]) {
+ return db.query('select public.prepare_public_ticket($1,$2,$3,$4,$5,$6,$7::jsonb) as value',[id,hash,'Synthetic public reporter','Synthetic QA','Desk QA',files.length ? '' : 'Public incident',JSON.stringify(files)]);
+}
+test('Phase 5: only server can reserve; retry is stable and changed content rejected', async () => {
+ for (const role of ['anon','authenticated']) await assert.rejects(asUser(a,()=>publicPrepare(),role),/permission denied/);
+ const first = await asUser(null,()=>publicPrepare(),'service_role'); publicTicket=first.rows[0].value;
+ const retry=await asUser(null,()=>publicPrepare(),'service_role'); assert.equal(retry.rows[0].value.id,publicTicket.id);
+ await assert.rejects(asUser(null,()=>publicPrepare(publicRequest,'c'.repeat(64)),'service_role'),/Retry content changed/);
+ await asUser(null,()=>db.query('select public.finalize_public_ticket($1,$2)',[publicRequest,publicHash]),'service_role');
+ await asUser(null,()=>db.query('select public.finalize_public_ticket($1,$2)',[publicRequest,publicHash]),'service_role');
+ assert.equal((await db.query("select count(*)::int as n from public.ticket_events where ticket_id=$1 and event_type='submitted'",[publicTicket.id])).rows[0].n,1);
+});
+test('Phase 5: anonymous cannot list/read/write tickets or invoke IT operations', async () => {
+ for(const table of ['tickets','profiles','ticket_attachments','ticket_comments','ticket_events']) {
+  await assert.rejects(asUser(null,()=>db.query(`select * from public.${table}`),'anon'),/permission denied/);
+  await assert.rejects(asUser(null,()=>db.query(`delete from public.${table}`),'anon'),/permission denied/);
+ }
+ await assert.rejects(asUser(null,()=>db.query('update public.tickets set description=$1 where id=$2',['attack',publicTicket.id]),'anon'),/permission denied/);
+ await assert.rejects(asUser(null,()=>change(publicTicket.id,{status:'acknowledged'}),'anon'),/permission denied/);
+ await assert.rejects(asUser(a,()=>change(publicTicket.id,{reply:'attack'})),/IT role required/);
+ assert.equal((await asUser(a,()=>db.query('select id from public.tickets where id=$1',[publicTicket.id]))).rows.length,0);
+});
+test('Phase 5: Admin receives public submission, lifecycle works and old ownership is intact', async () => {
+ const rows=await asUser(it,()=>db.query('select * from public.tickets where id=$1',[publicTicket.id])); assert.equal(rows.rows[0].reporter_location,'Desk QA');
+ for(const changes of [{status:'acknowledged'},{status:'in_progress',support_method:'remote'},{status:'in_progress',support_method:'onsite'},{status:'resolved',resolution:'Synthetic resolution'},{status:'closed'}]) await asUser(it,()=>change(publicTicket.id,changes));
+ const old=await db.query('select employee_id from public.tickets where id=$1',[ticketA.id]); assert.equal(old.rows[0].employee_id,a);
+ const events=await asUser(it,()=>db.query("select * from public.ticket_events where ticket_id=$1 and event_type='submitted'",[publicTicket.id])); assert.equal(events.rows[0].actor_id,null);
+});
+test('Phase 5: image-only finalization waits for private object; employee and anon cannot read it', async () => {
+ const id=crypto.randomUUID(); const result=await asUser(null,()=>publicPrepare(id,publicHash,[{content_type:'image/png',file_size:8,sha256:'d'.repeat(64)}]),'service_role');
+ const t=result.rows[0].value,path=t.attachments[0].path;
+ await assert.rejects(asUser(null,()=>db.query('select public.finalize_public_ticket($1,$2)',[id,publicHash]),'service_role'),/Attachments incomplete/);
+ await db.query("insert into storage.objects(bucket_id,name,metadata) values('incident-photos',$1,$2::jsonb)",[path,JSON.stringify({size:8,mimetype:'image/png'})]);
+ await asUser(null,()=>db.query('select public.finalize_public_ticket($1,$2)',[id,publicHash]),'service_role');
+ assert.equal((await asUser(a,()=>db.query('select * from storage.objects where name=$1',[path]))).rows.length,0);
+ await assert.rejects(asUser(null,()=>db.query('select * from storage.objects where name=$1',[path]),'anon'),/permission denied/);
+ assert.equal((await asUser(it,()=>db.query('select * from storage.objects where name=$1',[path]))).rows.length,1);
+});
+test('Phase 5: shared limiter is persistent and anonymous cannot call it',async()=>{
+ await assert.rejects(asUser(null,()=>db.query("select public.intake_allow('qa')"),'anon'),/permission denied/);
+ for(let i=0;i<10;i++) assert.equal((await asUser(null,()=>db.query("select public.intake_allow('qa') as allowed"),'service_role')).rows[0].allowed,true);
+ assert.equal((await asUser(null,()=>db.query("select public.intake_allow('qa') as allowed"),'service_role')).rows[0].allowed,false);
 });

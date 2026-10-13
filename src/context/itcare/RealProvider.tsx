@@ -72,7 +72,7 @@ export default function RealProvider({ children }: { children: ReactNode }) {
       subscription.unsubscribe();
     };
   }, []);
-  async function login(_role: 'employee' | 'it', email: string, password: string) {
+  async function login(role: 'employee' | 'it', email: string, password: string) {
     if (!supabase) throw new Error(configurationError || 'Chưa cấu hình Supabase.');
     setAuthError(null);
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -82,6 +82,7 @@ export default function RealProvider({ children }: { children: ReactNode }) {
     if (error || !data.user) throw new Error('Email hoặc mật khẩu không đúng.');
     try {
       const account = await profile(data.user.id);
+      if (role === 'it' && account.role !== 'it') throw new Error('Tài khoản không có quyền IT.');
       loadedIdentity.current = account.id;
       setUser(account);
       return account;
@@ -180,7 +181,7 @@ function RealData({
         const result: Incident = {
           id: created.ticket_number,
           databaseId: created.id,
-          employeeId: created.employee_id,
+          employeeId: created.employee_id || user.id,
           description: created.description || 'Sự cố được báo bằng ảnh',
           photos: [],
           created: created.created_at,

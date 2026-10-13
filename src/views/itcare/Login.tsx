@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -8,7 +8,6 @@ import { useCare } from '@/context/itcare';
 import { Attribution } from './shared';
 
 export default function Login() {
-  const it = useLocation().pathname.startsWith('/it');
   const { login, demo, configurationError, authLoading, authError } = useCare();
   const navigate = useNavigate();
   const [name, setName] = useState('');
@@ -20,9 +19,9 @@ export default function Login() {
       <Card className="w-full max-w-md border-none shadow-lg p-6">
         <div className="mx-auto text-xl font-semibold">ITCare</div>
         <div className="text-center">
-          <h1 className="text-lg">{it ? 'Đăng nhập IT' : 'Chào mừng bạn'}</h1>
+          <h1 className="text-lg">Đăng nhập IT</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            {it ? 'Tiếp nhận và hỗ trợ sự cố văn phòng' : 'Báo sự cố, theo dõi hỗ trợ dễ dàng'}
+            Tiếp nhận và hỗ trợ sự cố văn phòng
           </p>
         </div>
         <form
@@ -32,8 +31,9 @@ export default function Login() {
             setBusy(true);
             setError('');
             try {
-              const account = await login(it ? 'it' : 'employee', name, password);
-              navigate(account.role === 'it' ? '/it/inbox' : '/employee');
+              const account = await login('it', name, password);
+              if (account.role !== 'it') throw new Error('Tài khoản không có quyền IT.');
+              navigate('/it/inbox');
             } catch (err) {
               setError((err as Error).message);
             } finally {
@@ -76,10 +76,10 @@ export default function Login() {
         </form>
         {import.meta.env.DEV && demo ? <p className="text-xs text-muted-foreground">
           Đăng nhập mẫu: tên bất kỳ · mật khẩu <strong>demo123</strong>.{' '}
-          {it ? 'Tài khoản IT Võ Đức Minh.' : 'Tài khoản Nguyễn Minh Anh.'}
+          Tài khoản IT Võ Đức Minh.
         </p> : <p className="text-xs text-muted-foreground">Dùng email được công ty cấp quyền. Liên hệ IT nếu cần tài khoản hoặc đặt lại mật khẩu.</p>}
-        <Link className="text-sm underline text-center" to={it ? '/login' : '/it/login'}>
-          {it ? 'Dành cho nhân viên' : 'Dành cho IT'}
+        <Link className="text-sm underline text-center" to='/report'>
+          Báo sự cố không cần tài khoản
         </Link>
         <Attribution />
       </Card>

@@ -10,12 +10,7 @@ const FullLayout = Loadable(lazy(() => import('../layouts/full/FullLayout')));
 const BlankLayout = Loadable(lazy(() => import('../layouts/blank/BlankLayout')));
 const ItLayout = Loadable(lazy(() => import('../views/itcare/ItLayout')));
 const CareLogin = Loadable(lazy(() => import('../views/itcare/Login')));
-const EmployeeLayout = Loadable(lazy(() => import('../views/itcare/Employee')));
-const EmployeeHome = Loadable(lazy(() => import('../views/itcare/Employee').then(m => ({ default: m.Home }))));
-const ReportIncident = Loadable(lazy(() => import('../views/itcare/Employee').then(m => ({ default: m.Report }))));
-const MyRequests = Loadable(lazy(() => import('../views/itcare/Employee').then(m => ({ default: m.Requests }))));
-const Submitted = Loadable(lazy(() => import('../views/itcare/Employee').then(m => ({ default: m.Submitted }))));
-const Contact = Loadable(lazy(() => import('../views/itcare/Employee').then(m => ({ default: m.Contact }))));
+const PublicReport = Loadable(lazy(() => import('../views/itcare/PublicReport')));
 const Inbox = Loadable(lazy(() => import('../views/itcare/Desktop')));
 const Details = Loadable(lazy(() => import('../views/itcare/Desktop').then(m => ({ default: m.Details }))));
 const Staff = Loadable(lazy(() => import('../views/itcare/Desktop').then(m => ({ default: m.Staff }))));
@@ -60,17 +55,11 @@ const TwoSteps2 = Loadable(lazy(() => import('../views/auth/auth2/two-steps')));
 const Maintainance = Loadable(lazy(() => import('../views/auth/maintenance')));
 
 const Router = [
-  { path: '/', element: <Navigate to='/login' replace /> },
-  { path: '/login', element: <CareLogin /> },
+  { path: '/', element: <PublicReport /> },
+  { path: '/report', element: <PublicReport /> },
+  { path: '/login', element: <Navigate to='/report' replace /> },
+  { path: '/employee/*', element: <Navigate to='/report' replace /> },
   { path: '/it/login', element: <CareLogin /> },
-  { path: '/employee', element: <EmployeeLayout />, children: [
-    { index: true, element: <EmployeeHome /> },
-    { path: 'report', element: <ReportIncident /> },
-    { path: 'requests', element: <MyRequests /> },
-    { path: 'requests/:id', element: <Details /> },
-    { path: 'submitted/:id', element: <Submitted /> },
-    { path: 'contact', element: <Contact /> },
-  ] },
   { path: '/it', element: <ItLayout />, children: [
     { index: true, element: <Navigate to="/it/inbox" replace /> },
     { path: 'inbox', element: <Inbox /> },
@@ -125,7 +114,7 @@ const Router = [
     ],
   },
 ] : []),
-  { path: '*', element: <Navigate to='/login' replace /> },
+  { path: '*', element: <Navigate to='/report' replace /> },
 ];
 
 const router = createBrowserRouter(Router);

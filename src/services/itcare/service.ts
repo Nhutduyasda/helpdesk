@@ -16,7 +16,10 @@ export type ProfileRow = {
 export type TicketRow = {
   id: string;
   ticket_number: string;
-  employee_id: string;
+  employee_id: string | null;
+  reporter_name?: string | null;
+  reporter_department?: string | null;
+  reporter_location?: string | null;
   description: string;
   status: StatusCode;
   support_method: 'remote' | 'onsite' | null;
@@ -41,7 +44,7 @@ export type CommentRow = {
 };
 export type EventRow = {
   id: string;
-  actor_id: string;
+  actor_id: string | null;
   ticket_id: string;
   event_type: string;
   event_data: {
@@ -112,7 +115,9 @@ export function createCareService(gateway: CareGateway) {
         .map((t) => ({
           id: t.ticket_number,
           databaseId: t.id,
-          employeeId: t.employee_id,
+          employeeId: t.employee_id || '',
+          reporter: t.employee_id ? undefined : { name: t.reporter_name || '', department: t.reporter_department || '' },
+          location: t.reporter_location || undefined,
           description: t.description || 'Sự cố được báo bằng ảnh',
           created: t.created_at,
           status: statusLabel(t.status),
