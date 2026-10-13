@@ -1,5 +1,7 @@
 # ITCare Phase 3 review
 
+Phase 4 staging review is in progress on a separate stacked branch. See [current results and external blockers](docs/PHASE_4_STAGING_REPORT.md) and [pilot checklist](docs/PHASE_4_PILOT_CHECKLIST.md). No HTTPS staging or employee pilot is approved by the repository-only checks.
+
 Built on Shadcn Dashboard React Free revision `386235c3199168fa743db593d7acf014a40f1ca1`. Original template README content, MIT license and attribution are retained. Phase 3 starts from Phase 2 commit `e28ee50efbd69b2e1b83a24ab88b925e958c9ef7`, on `phase-3-notifications-staging`. The live test project is `itcare-dev` (`agcoboeswdvnumzyrtbu`). Main remains Phase 1.
 
 Critical live acceptance passes: IT/A/B login, persistent description and private-image tickets, separate IT browser workflow, refresh/logout, ownership-negative API/UI checks, immediate deactivation, closed tickets and signed-URL expiry. In-app notifications and foreground browser Notification API are verified. Background/closed-app push is BLOCKED; physical phone delivery and installation are NOT TESTED. Staging deployment is DEFERRED by the user; code and Cloudflare deployment instructions are complete without a claimed staging URL.

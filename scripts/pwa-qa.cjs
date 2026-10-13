@@ -1,7 +1,9 @@
-const {chromium}=require(process.env.PLAYWRIGHT_MODULE || 'C:/Users/nhutd/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const { browserOptions, outputDirectory, playwright } = require('./qa-runtime.cjs');
+const { chromium } = playwright();
+const qaOutput = outputDirectory();
 const assert=require('node:assert/strict');const fs=require('node:fs');
 (async()=>{
- const browser=await chromium.launch({channel:'msedge',headless:true});
+ const browser=await chromium.launch(browserOptions());
  const context=await browser.newContext({viewport:{width:390,height:844}});
  const page=await context.newPage();const errors=[];page.on('pageerror',()=>errors.push('JavaScript exception'));
  const base=process.env.PWA_QA_URL || 'http://127.0.0.1:5175';
@@ -19,11 +21,11 @@ const assert=require('node:assert/strict');const fs=require('node:fs');
  const cacheURLs=await page.evaluate(async()=>{const urls=[];for(const name of await caches.keys()){if(name.startsWith('itcare-'))for(const request of await (await caches.open(name)).keys())urls.push(request.url);}return urls;});
  assert(cacheURLs.every(url=>new URL(url).origin===new URL(base).origin));
  assert(!cacheURLs.some(url=>/supabase|\/rest\/|\/auth\/|\/storage\/|\/employee|\/it\/tickets/.test(url)));
- await page.screenshot({path:'docs/phase-3/screenshots/pwa-login-390.png',fullPage:true});
+ await page.screenshot({path:qaOutput + '/screenshots/pwa-login-390.png',fullPage:true});
  await context.setOffline(true);await page.goto(base+'/employee/report');
  await page.getByRole('heading',{name:'ITCare đang mất kết nối',exact:true}).waitFor();
  await context.setOffline(false);await page.reload();await page.waitForURL('**/login');
  assert.equal(errors.length,0);
  const report={passed:true,manifest:true,iconSizes:true,serviceWorker:true,privateCacheEntries:0,offlineNavigation:true,installabilityErrors,physicalAndroid:'NOT TESTED',physicalIPhone:'NOT TESTED',realHomeScreenInstallation:'NOT TESTED'};
- fs.writeFileSync('docs/phase-3/pwa-qa.json',JSON.stringify(report,null,2));await browser.close();console.log(JSON.stringify(report,null,2));
+ fs.writeFileSync(qaOutput + '/pwa-qa.json',JSON.stringify(report,null,2));await browser.close();console.log(JSON.stringify(report,null,2));
 })().catch(error=>{console.error('PWA browser QA failed:', error.message);process.exit(1)});

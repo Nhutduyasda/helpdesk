@@ -1,0 +1,71 @@
+{
+  "checkedAt": "2026-10-12T03:43:56.331Z",
+  "project": "agcoboeswdvnumzyrtbu",
+  "mode": "unauthenticated public-key HTTP only",
+  "checks": [
+    {
+      "name": "anonymous SELECT profiles",
+      "httpStatus": 401,
+      "denied": true
+    },
+    {
+      "name": "anonymous SELECT tickets",
+      "httpStatus": 401,
+      "denied": true
+    },
+    {
+      "name": "anonymous SELECT ticket_attachments",
+      "httpStatus": 401,
+      "denied": true
+    },
+    {
+      "name": "anonymous SELECT ticket_comments",
+      "httpStatus": 401,
+      "denied": true
+    },
+    {
+      "name": "anonymous SELECT ticket_events",
+      "httpStatus": 401,
+      "denied": true
+    },
+    {
+      "name": "anonymous RPC prepare_ticket",
+      "httpStatus": 401,
+      "errorCode": "42501",
+      "validSignature": true,
+      "denied": true
+    },
+    {
+      "name": "anonymous RPC finalize_ticket",
+      "httpStatus": 401,
+      "errorCode": "42501",
+      "validSignature": true,
+      "denied": true
+    },
+    {
+      "name": "anonymous RPC update_ticket",
+      "httpStatus": 401,
+      "errorCode": "42501",
+      "validSignature": true,
+      "denied": true
+    },
+    {
+      "name": "anonymous RPC set_employee_active",
+      "httpStatus": 401,
+      "errorCode": "42501",
+      "validSignature": true,
+      "denied": true
+    }
+  ],
+  "auth": {
+    "disableSignup": true,
+    "emailEnabled": true,
+    "anonymousEnabled": false
+  },
+  "privateSchema": {
+    "httpStatus": 406,
+    "code": "PGRST106",
+    "excluded": true
+  },
+  "passed": true
+}

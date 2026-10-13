@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "filesScanned": 129,
+  "jsFiles": 101,
+  "checks": [
+    "All distributable files scanned",
+    "No demo credential/session shortcut",
+    "No secret key or privileged legacy JWT",
+    "No configured private values, including mis-prefixed VITE values"
+  ],
+  "publicSupabaseConfigExpected": true
+}

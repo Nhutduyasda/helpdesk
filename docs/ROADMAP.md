@@ -1,5 +1,9 @@
 # Review gate and next phases
 
+## Phase 4 current gate — 2026-10-12
+
+Repository baseline and current read-only Supabase controls verified. Scanner/staging-QA portability fixes are scoped to the stacked Phase 4 branch. HTTPS staging and independent authenticated A/B/IT acceptance remain BLOCKED; physical-device cases are NOT TESTED. **NO-GO for employee pilot** until those and operational prerequisites pass. See `PHASE_4_STAGING_REPORT.md` and `PHASE_4_PILOT_CHECKLIST.md`. No background push feature, main merge, production deployment or real onboarding is authorized by this status.
+
 ## Phase 3 current state — 2026-10-10
 
 Critical live Auth, persistent description/image submissions, separate IT workflow, ownership isolation, deactivation and signed-URL expiry pass against `itcare-dev`. The migration filename now matches verified cloud history without SQL or remote-history changes. In-app notifications, explicit foreground device opt-in, static-only PWA and offline feedback are implemented. See `PHASE_3_LIVE_QA.md`, `NOTIFICATION_ARCHITECTURE.md` and `PWA_STAGING_QA.md` for evidence and limits.

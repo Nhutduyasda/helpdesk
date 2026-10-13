@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - phase-3-final-completion
+      - phase-4-staging-pilot-readiness
   pull_request:
     branches:
       - phase-3-notifications-staging
+      - phase-3-final-completion
   workflow_dispatch:
 
 permissions:
@@ -56,6 +58,8 @@ jobs:
         run: npm run build
       - name: Scan distributable for private values
         run: node scripts/scan-build.mjs
+        env:
+          BUILD_SCAN_REPORT: docs/phase-4/build-scan.json
       - name: Store verified build artifact
         uses: actions/upload-artifact@v4
         with:
@@ -67,7 +71,10 @@ jobs:
   deploy-preview:
     name: Deploy gated Cloudflare Pages preview
     needs: verify
-    if: github.event_name == 'push' && vars.ITCARE_STAGING_DEPLOY_ENABLED == 'true'
+    if: >-
+      (github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
+      (github.ref == 'refs/heads/phase-3-final-completion' || github.ref == 'refs/heads/phase-4-staging-pilot-readiness') &&
+      vars.ITCARE_STAGING_DEPLOY_ENABLED == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: read

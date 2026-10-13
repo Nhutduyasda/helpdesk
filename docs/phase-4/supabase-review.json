@@ -1,0 +1,31 @@
+{
+  "checkedDate": "2026-10-12",
+  "project": "itcare-dev",
+  "projectRef": "agcoboeswdvnumzyrtbu",
+  "status": "ACTIVE_HEALTHY",
+  "region": "ap-southeast-1",
+  "databaseVersion": "17.11.0.003",
+  "migrations": [{ "version": "20261010075402", "name": "itcare_initial" }],
+  "businessTablesRls": ["profiles", "tickets", "ticket_attachments", "ticket_comments", "ticket_events"],
+  "authenticatedBusinessTablePrivileges": ["SELECT"],
+  "anonymousBusinessTableGrants": [],
+  "storageObjectsRls": true,
+  "bucket": { "id": "incident-photos", "public": false, "fileSizeLimit": 5242880, "mimeTypes": ["image/jpeg", "image/png", "image/webp"] },
+  "rpcSearchPathsEmpty": true,
+  "rpcAnonymousExecute": false,
+  "currentSchemaMatchesCommittedPhase3Digests": true,
+  "digests": {
+    "enums": "32564450021c809f9e63d0575b8abe2e",
+    "columns": "255bc14c7353159788fcea3a73107edc",
+    "policies": "85edbea5a00f8b55c7fbdab4f712e555",
+    "functions": "71367ee4f8960945ef8a9d5ded00f40d",
+    "constraints": "936a7aaa74cb21d1c6d50ca781a299a8"
+  },
+  "securityAdvisors": [
+    { "name": "authenticated_security_definer_function_executable", "level": "WARN", "count": 4, "status": "Intentional guarded RPCs; review retained" },
+    { "name": "auth_leaked_password_protection", "level": "WARN", "count": 1, "status": "OPEN" }
+  ],
+  "fullAuthUrlConfiguration": "UNVERIFIED",
+  "authenticatedCloudAcceptanceThisRun": "BLOCKED: test login credentials absent",
+  "remoteMutations": "NONE"
+}

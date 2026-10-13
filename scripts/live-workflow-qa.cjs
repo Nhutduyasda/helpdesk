@@ -1,6 +1,9 @@
-const {chromium}=require('C:/Users/nhutd/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');const fs=require('node:fs');const assert=require('node:assert/strict');
-(async()=>{const {loadEnv}=await import('vite');const env=loadEnv('development',process.cwd(),'');const browser=await chromium.launch({channel:'msedge',headless:true});const report={checks:[]};let step='separate sessions';
- const pass=name=>report.checks.push({name,status:'PASSED'});const base='http://127.0.0.1:5174';
+const { browserOptions, outputDirectory, playwright } = require('./qa-runtime.cjs');
+const { chromium } = playwright();
+const qaOutput = outputDirectory();
+const fs=require('node:fs');const assert=require('node:assert/strict');
+(async()=>{const {loadEnv}=await import('vite');const env=loadEnv('development',process.cwd(),'');const browser=await chromium.launch(browserOptions());const report={checks:[]};let step='separate sessions';
+ const pass=name=>report.checks.push({name,status:'PASSED'});const base=process.env.LIVE_QA_URL || 'http://127.0.0.1:5174';
  const login=async(page,label)=>{await page.goto(base+(label==='IT'?'/it/login':'/login'));await page.getByLabel('Tên đăng nhập / email').fill(env[`ITCARE_TEST_${label}_EMAIL`]);await page.getByLabel('Mật khẩu',{exact:true}).fill(env[`ITCARE_TEST_${label}_PASSWORD`]);await page.getByRole('button',{name:'Đăng nhập',exact:true}).click();await page.waitForURL(label==='IT'?'**/it/inbox':'**/employee');};
  try{
   const a=await browser.newPage({viewport:{width:375,height:812}});const it=await browser.newPage({viewport:{width:1440,height:900}});await login(a,'A');await login(it,'IT');
@@ -16,5 +19,5 @@ const {chromium}=require('C:/Users/nhutd/.cache/codex-runtimes/codex-primary-run
   for(let i=0;i<40&&!committed;i++)await new Promise(r=>setTimeout(r,100));assert(committed);await a.reload();await a.goto(base+'/employee/requests');await a.getByText(during,{exact:true}).waitFor();assert.equal(await a.getByText(during,{exact:true}).count(),1);pass('Refresh after commit during pending response recovers one persistent ticket');
   step='session expiration';await a.evaluate(()=>{for(const key of Object.keys(localStorage)){if(key.startsWith('sb-')&&key.endsWith('-auth-token')){const session=JSON.parse(localStorage.getItem(key));session.expires_at=1;session.access_token='expired-invalid-token';session.refresh_token='invalid-expired-refresh-token';localStorage.setItem(key,JSON.stringify(session));}}});await a.reload();await a.waitForURL('**/login');pass('Expired session with rejected refresh returns to login');
   report.passed=true;
- }catch(error){report.passed=false;report.checks.push({name:step,status:'FAILED',error:error.message.split('\n')[0]});process.exitCode=1;}finally{await browser.close();fs.writeFileSync('docs/phase-3/live-workflow.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));}
+ }catch(error){report.passed=false;report.checks.push({name:step,status:'FAILED',error:'QA step failed; inspect locally without sharing credentials'});process.exitCode=1;}finally{await browser.close();fs.writeFileSync(qaOutput + '/live-workflow.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));}
 })();

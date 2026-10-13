@@ -1,3 +1,5 @@
+import qaRuntime from './qa-runtime.cjs';
+const qaOutput = qaRuntime.outputDirectory();
 import {loadEnv} from 'vite';
 import {createClient} from '@supabase/supabase-js';
 import {readFile,writeFile} from 'node:fs/promises';
@@ -59,4 +61,4 @@ try{
  assert((await anon.from('tickets').select('*')).error);assert((await anon.rpc('finalize_ticket',{p_ticket_id:photo.id})).error);pass('Anonymous direct API and RPC denied');
  report.testTicketNumbers=[ticket.ticket_number,photo.ticket_number];report.passed=true;
 }catch{report.passed=false;report.checks.push({name:step,status:'FAILED'});process.exitCode=1;}
-finally{for(const {c} of Object.values(clients))await c.auth.signOut();await writeFile('docs/phase-3/live-data.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));}
+finally{for(const {c} of Object.values(clients))await c.auth.signOut();await writeFile(qaOutput + '/live-data.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));}
