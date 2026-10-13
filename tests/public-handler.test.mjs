@@ -5,7 +5,6 @@ const envValues = {
   INTAKE_ORIGINS: "https://office.test",
   INTAKE_DEPARTMENTS: "Synthetic QA",
   TURNSTILE_SECRET_KEY: "synthetic-secret",
-  INTAKE_RATE_SECRET: "synthetic-rate-secret",
 };
 const env = (k) => envValues[k];
 function request(overrides = {}, images = []) {
@@ -36,7 +35,7 @@ function gateway() {
     objects,
     rpc: async (name, args) => {
       calls.push({ name, args });
-      if (name === "intake_allow") return { data: true };
+      if (name === "intake_precheck") return { data: true };
       if (name === "prepare_public_ticket") {
         return {
           data: {
@@ -98,7 +97,7 @@ test("handler returns only reference, private immutable images survive response-
 });
 test("bot failure, mismatched hostname/action and invalid fields create no reservation", async () => {
   for (
-    const bot of [{ success: false }, {
+    const bot of [{ success: false }, {success:'true',hostname:'office.test',action:'incident-report'}, {
       success: true,
       hostname: "attacker.test",
       action: "incident-report",
@@ -148,4 +147,84 @@ test("rate and storage failures fail closed, unapproved origins are forbidden", 
     )).status,
     403,
   );
+});
+
+test("malformed/bot/spoofed requests do not use verified office allowance", async () => {
+  const client = gateway();
+  let verifiedReservations = 0;
+  const original = client.rpc;
+  client.rpc = async (name, args) => {
+    if (name === "prepare_public_ticket") verifiedReservations++;
+    return original(name, args);
+  };
+  const rejectBot = async () => Response.json({ success: false });
+  for (let i = 0; i < 20; i++) {
+    const bad = request(i % 2 ? { token: "spoofed" } : { name: "" });
+    bad.headers.set("x-forwarded-for", `192.0.2.${i}`);
+    bad.headers.set("cf-connecting-ip", `198.51.100.${i}`);
+    assert.equal(
+      (await intakeHandler(client, env, rejectBot)(bad)).status,
+      400,
+    );
+  }
+  assert.equal(verifiedReservations, 0);
+  assert.equal(
+    (await intakeHandler(client, env, verify)(request())).status,
+    200,
+  );
+  assert.equal(verifiedReservations, 1);
+  assert(
+    client.calls.filter((c) => c.name === "intake_precheck").every((c) =>
+      c.args === undefined
+    ),
+  );
+});
+test("invalid images and failed verifier do not reserve; limiter errors fail closed", async () => {
+  for (
+    const verifier of [verify, async () => {
+      throw new Error("verification offline");
+    }]
+  ) {
+    const client = gateway();
+    const result = await intakeHandler(client, env, verifier)(
+      request({}, [new Blob(["spoofed"], { type: "image/png" })]),
+    );
+    assert.equal(result.status, 400);
+    assert(!client.calls.some((c) => c.name === "prepare_public_ticket"));
+  }
+  const client = gateway();
+  client.rpc = async () => ({ error: { message: "offline" } });
+  assert.equal(
+    (await intakeHandler(client, env, verify)(request())).status,
+    503,
+  );
+});
+test("cheap server checks precede body/DB work and capacity rejection reports retry", async () => {
+  const client = gateway(), handler = intakeHandler(client, env, verify);
+  assert.equal(
+    (await handler(
+      new Request("https://api.test", {
+        method: "POST",
+        headers: {
+          origin: "https://office.test",
+          "content-type": "application/json",
+        },
+        body: "{}",
+      }),
+    )).status,
+    415,
+  );
+  const huge = request();
+  huge.headers.set("content-length", String(17 * 1024 * 1024));
+  assert.equal((await handler(huge)).status, 413);
+  assert.equal(client.calls.length, 0);
+  const original = client.rpc;
+  client.rpc = async (name, args) =>
+    name === "prepare_public_ticket"
+      ? { error: { message: "Intake capacity reached" } }
+      : original(name, args);
+  const response = await handler(request());
+  assert.equal(response.status, 429);
+  assert.equal(response.headers.get("retry-after"), "60");
+  assert(!client.calls.some((c) => c.name === "finalize_public_ticket"));
 });

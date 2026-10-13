@@ -33,20 +33,35 @@ export async function digest(bytes: BufferSource) {
     new Uint8Array(await crypto.subtle.digest("SHA-256", bytes)),
   ).map((v) => v.toString(16).padStart(2, "0")).join("");
 }
-export async function boundedBody(request: Request) {
+export async function boundedBody(
+  request: Request,
+  signal = AbortSignal.timeout(30000),
+) {
   const reader = request.body?.getReader();
   if (!reader) throw new Error("body");
   const chunks: Uint8Array[] = [];
   let size = 0;
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    size += value.length;
-    if (size > MAX_BODY) {
-      await reader.cancel();
-      throw new Error("size");
+  const abort = () => {
+    void reader.cancel().catch(() => {});
+  };
+  signal.addEventListener("abort", abort, { once: true });
+  if (signal.aborted) abort();
+  try {
+    while (true) {
+      if (signal.aborted) throw new Error("body timeout");
+      const { done, value } = await reader.read();
+      if (signal.aborted) throw new Error("body timeout");
+      if (done) break;
+      size += value.length;
+      if (size > MAX_BODY) {
+        await reader.cancel();
+        throw new Error("size");
+      }
+      chunks.push(value);
     }
-    chunks.push(value);
+  } finally {
+    signal.removeEventListener("abort", abort);
+    reader.releaseLock();
   }
   const body = new Uint8Array(size);
   let offset = 0;

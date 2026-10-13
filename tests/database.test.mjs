@@ -61,6 +61,7 @@ before(async () => {
   const snapshotSQL = `select jsonb_build_object('tickets',(select jsonb_agg(to_jsonb(t)-array['reporter_name','reporter_department','reporter_location'] order by id) from public.tickets t),'attachments',(select jsonb_agg(to_jsonb(a) order by id) from public.ticket_attachments a),'events',(select jsonb_agg(to_jsonb(e) order by id) from public.ticket_events e),'profiles',(select jsonb_agg(to_jsonb(p) order by id) from public.profiles p)) as snapshot`;
   const beforeMigration = (await db.query(snapshotSQL)).rows[0].snapshot;
   await db.exec(await readFile(new URL('../supabase/migrations/20261013023844_public_incident_intake.sql', import.meta.url), 'utf8'));
+  await db.exec(await readFile(new URL('../supabase/migrations/20261013031245_intake_availability_hardening.sql', import.meta.url), 'utf8'));
   const afterMigration = (await db.query(snapshotSQL)).rows[0].snapshot;
   assert.deepEqual(afterMigration, beforeMigration, 'Additive migration preserves every existing row value');
 });
@@ -336,8 +337,25 @@ test('Phase 5: image-only finalization waits for private object; employee and an
  await assert.rejects(asUser(null,()=>db.query('select * from storage.objects where name=$1',[path]),'anon'),/permission denied/);
  assert.equal((await asUser(it,()=>db.query('select * from storage.objects where name=$1',[path]))).rows.length,1);
 });
-test('Phase 5: shared limiter is persistent and anonymous cannot call it',async()=>{
- await assert.rejects(asUser(null,()=>db.query("select public.intake_allow('qa')"),'anon'),/permission denied/);
- for(let i=0;i<10;i++) assert.equal((await asUser(null,()=>db.query("select public.intake_allow('qa') as allowed"),'service_role')).rows[0].allowed,true);
- assert.equal((await asUser(null,()=>db.query("select public.intake_allow('qa') as allowed"),'service_role')).rows[0].allowed,false);
+test('Phase 5: layered ingress limiter is persistent and server-only',async()=>{
+ for(const role of ['anon','authenticated']) await assert.rejects(asUser(null,()=>db.query('select public.intake_precheck()'),role),/permission denied/);
+ await assert.rejects(asUser(null,()=>db.query("select public.intake_allow('qa')"),'service_role'),/permission denied/);
+ for(let i=0;i<120;i++) assert.equal((await asUser(null,()=>db.query('select public.intake_precheck() as allowed'),'service_role')).rows[0].allowed,true);
+ assert.equal((await asUser(null,()=>db.query('select public.intake_precheck() as allowed'),'service_role')).rows[0].allowed,false);
+ await db.exec("update itcare_private.intake_limits set window_start=now()-interval '1 minute' where bucket='ingress:minute'; update itcare_private.intake_limits set attempts=1000 where bucket='ingress:hour';");
+ assert.equal((await asUser(null,()=>db.query('select public.intake_precheck() as allowed'),'service_role')).rows[0].allowed,false);
+});
+test('Phase 5: only new reservations use office capacity; retries work at capacity and invalid input rolls back',async()=>{
+ const count=()=>db.query("select attempts from itcare_private.intake_limits where bucket='verified:hour'");
+ const before=(await count()).rows[0].attempts;
+ await asUser(null,()=>publicPrepare(),'service_role');assert.equal((await count()).rows[0].attempts,before);
+ await assert.rejects(asUser(null,()=>publicPrepare(crypto.randomUUID(),publicHash,[{content_type:'image/svg+xml',file_size:1,sha256:'d'.repeat(64)}]),'service_role'),/Invalid attachment/);
+ assert.equal((await count()).rows[0].attempts,before);
+ await db.exec("update itcare_private.intake_limits set attempts=9 where bucket='verified:hour'");
+ const id=crypto.randomUUID();await asUser(null,()=>publicPrepare(id),'service_role');assert.equal((await count()).rows[0].attempts,10);
+ await assert.rejects(asUser(null,()=>publicPrepare(crypto.randomUUID()),'service_role'),/Intake capacity reached/);
+ assert.equal((await count()).rows[0].attempts,10);
+ await asUser(null,()=>publicPrepare(id),'service_role');assert.equal((await count()).rows[0].attempts,10);
+ await db.exec("update itcare_private.intake_limits set window_start=now()-interval '1 hour' where bucket='verified:hour'");
+ await asUser(null,()=>publicPrepare(crypto.randomUUID()),'service_role');assert.equal((await count()).rows[0].attempts,1);
 });

@@ -2,6 +2,7 @@ import type { SupabaseClient } from "npm:@supabase/supabase-js@2.117.3";
 import {
   boundedBody,
   digest,
+  MAX_BODY,
   validateFields,
   validImage,
 } from "./validation.ts";
@@ -22,7 +23,10 @@ export function intakeHandler(
       "Vary": "Origin",
     };
     const reply = (data: unknown, status = 200) =>
-      Response.json(data, { status, headers });
+      Response.json(data, {
+        status,
+        headers: status === 429 ? { ...headers, "Retry-After": "60" } : headers,
+      });
     if (!origin || !allowed.includes(origin)) {
       return new Response("Forbidden", {
         status: 403,
@@ -34,35 +38,30 @@ export function intakeHandler(
     }
     if (request.method !== "POST") return reply({ error: "method" }, 405);
     const secret = env("TURNSTILE_SECRET_KEY");
-    const salt = env("INTAKE_RATE_SECRET");
     const departments = (env("INTAKE_DEPARTMENTS") || "").split("|").filter(
       Boolean,
     );
-    if (!secret || !salt || !departments.length) {
+    if (!secret || !departments.length) {
       return reply({ error: "unavailable" }, 503);
     }
     try {
-      // Configure only a header overwritten by the deployment's trusted gateway.
-      // Without one, all visitors share the conservative 10/hour bucket.
-      const ipHeader = env("INTAKE_TRUSTED_IP_HEADER");
-      const ip = ipHeader
-        ? request.headers.get(ipHeader) || "unknown"
-        : "shared";
-      const key = await crypto.subtle.importKey(
-        "raw",
-        new TextEncoder().encode(salt),
-        { name: "HMAC", hash: "SHA-256" },
-        false,
-        ["sign"],
-      );
-      const bucket = Array.from(
-        new Uint8Array(
-          await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(ip)),
-        ),
-      ).map((v) => v.toString(16).padStart(2, "0")).join("");
-      const limit = await client.rpc("intake_allow", { p_bucket: bucket });
-      if (limit.error) return reply({ error: "unavailable" }, 503);
-      if (!limit.data) return reply({ error: "rate" }, 429);
+      // Header values cannot define identity or increase any rate allowance.
+      if (
+        !/^multipart\/form-data;\s*boundary=/i.test(
+          request.headers.get("content-type") || "",
+        )
+      ) return reply({ error: "content_type" }, 415);
+      const length = request.headers.get("content-length");
+      if (length && (!/^\d+$/.test(length) || Number(length) > MAX_BODY)) {
+        return reply({ error: "size" }, 413);
+      }
+      const limit = await client.rpc("intake_precheck");
+      if (limit.error || limit.data !== true) {
+        return reply(
+          { error: limit.error ? "unavailable" : "rate" },
+          limit.error ? 503 : 429,
+        );
+      }
       const raw = await boundedBody(request);
       const form = await new Request(request.url, {
         method: "POST",
@@ -111,7 +110,7 @@ export function intakeHandler(
       );
       const bot = await verification.json();
       if (
-        !verification.ok || !bot.success || bot.action !== "incident-report" ||
+        !verification.ok || bot.success !== true || bot.action !== "incident-report" ||
         bot.hostname !== new URL(origin).hostname
       ) return reply({ error: "verification" }, 400);
       const blobs: { bytes: Uint8Array; type: string }[] = [];
@@ -149,6 +148,9 @@ export function intakeHandler(
         p_description: fields.description,
         p_files: manifest,
       });
+      if (reservation.error?.message === "Intake capacity reached") {
+        return reply({ error: "rate" }, 429);
+      }
       if (reservation.error) throw new Error("reservation");
       const ticket = reservation.data;
       if (!ticket.submitted) {

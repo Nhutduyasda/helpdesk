@@ -1,0 +1,88 @@
+name: ITCare Phase 5 isolated preview (approval required)
+on:
+  workflow_dispatch:
+    inputs:
+      approved_commit:
+        description: 'Full Phase 5 SHA explicitly approved for this deployment'
+        required: true
+        type: string
+      approval:
+        description: 'Type DEPLOY_ISOLATED_PHASE5 after reviewing the staging checklist'
+        required: true
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: itcare-phase5-isolated-preview
+  cancel-in-progress: false
+jobs:
+  prepare:
+    if: >-
+      github.ref == 'refs/heads/codex/phase-5-passwordless-reporting' &&
+      inputs.approval == 'DEPLOY_ISOLATED_PHASE5' &&
+      vars.ITCARE_PHASE5_DEPLOY_ENABLED == 'true'
+    environment: itcare-phase5-preview
+    runs-on: ubuntu-latest
+    env:
+      APPROVED_COMMIT: ${{ inputs.approved_commit }}
+      VITE_SUPABASE_URL: ${{ vars.ITCARE_PHASE5_SUPABASE_URL }}
+      VITE_SUPABASE_PUBLISHABLE_KEY: ${{ vars.ITCARE_PHASE5_SUPABASE_PUBLISHABLE_KEY }}
+      VITE_ITCARE_DEPARTMENTS: ${{ vars.ITCARE_PHASE5_DEPARTMENTS }}
+      VITE_TURNSTILE_SITE_KEY: ${{ vars.ITCARE_PHASE5_TURNSTILE_SITE_KEY }}
+      VITE_ITCARE_DEMO: 'false'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify revision and isolated public configuration
+        run: node scripts/phase5-preview-config.mjs validate
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run lint:itcare
+      - run: npx eslint supabase/functions/public-intake --max-warnings 0
+      - run: npm audit --audit-level=high
+      - run: npm run build
+      - name: Scope built CSP to the isolated Supabase host
+        run: node scripts/phase5-preview-config.mjs headers
+      - run: node scripts/scan-build.mjs
+        env:
+          BUILD_SCAN_REPORT: docs/phase-5/isolated-build-scan.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: phase5-isolated-${{ github.sha }}
+          path: dist/
+          retention-days: 7
+  deploy:
+    needs: prepare
+    environment: itcare-phase5-preview
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    env:
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.ITCARE_PHASE5_CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.ITCARE_PHASE5_CLOUDFLARE_API_TOKEN }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: phase5-isolated-${{ github.sha }}
+          path: dist/
+      - name: Verify dedicated Pages project and preview branch separation
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+          test -n "$CLOUDFLARE_API_TOKEN"
+          response="$(curl --fail --silent --show-error \
+            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/itcare-phase5-test")"
+          echo "$response" | jq -e '.success == true and .result.name == "itcare-phase5-test" and .result.production_branch == "phase5-production-disabled"' >/dev/null
+      - name: Publish approved Phase 5 preview only
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.ITCARE_PHASE5_CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.ITCARE_PHASE5_CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=itcare-phase5-test --branch=phase5-preview
+# No Supabase credentials, migrations, Auth changes or Edge deployment in this workflow.
