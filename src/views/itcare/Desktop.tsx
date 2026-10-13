@@ -249,6 +249,11 @@ export function Inbox() {
 }
 export function Details() {
   const { id } = useParams();
+  // Keep drafts and operation refs for refreshes of one ticket, but isolate navigation.
+  return <TicketDetails key={id} />;
+}
+function TicketDetails() {
+  const { id } = useParams();
   const { tickets, employees, user, update, loading, error: dataError, demo } = useCare();
   const [reply, setReply] = useState('');
   const operation = useRef<{ payload: string; id: string } | null>(null);

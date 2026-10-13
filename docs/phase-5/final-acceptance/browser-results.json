@@ -1,0 +1,22 @@
+[
+  {
+    "width": 390,
+    "passed": true,
+    "retrySameId": true,
+    "anonymousAdminBlocked": true,
+    "legacyRoutesRetired": true,
+    "submission": "mock HTTP boundary",
+    "imageOnly": true,
+    "invalidAttachmentRejected": true
+  },
+  {
+    "width": 1440,
+    "passed": true,
+    "retrySameId": true,
+    "anonymousAdminBlocked": true,
+    "legacyRoutesRetired": true,
+    "submission": "mock HTTP boundary",
+    "imageOnly": true,
+    "invalidAttachmentRejected": true
+  }
+]

@@ -1,0 +1,63 @@
+# Supabase Changelog
+
+## An outdated subset of TLS 1.2 ciphers will be disabled on project HTTP APIs
+
+2026-10-12 · Breaking Change · Auth, Data APIs, Storage, Realtime, Edge Functions · [supabase.com/changelog/cbc-tls-ciphers-deprecated](https://supabase.com/changelog/cbc-tls-ciphers-deprecated)
+
+Supabase will be disabling a subset of TLS 1.2 ciphers on project HTTP APIs on November 10, 2026. Clients that don't support modern standards (<0.0001% of Supabase traffic) will fail to connect.
+
+---
+
+## ASP.NET Core dependency injection for the Supabase .NET SDK
+
+2026-10-12 · New Feature · supabase-dotnet · [supabase.com/changelog/dotnet-dependency-injection-extension](https://supabase.com/changelog/dotnet-dependency-injection-extension)
+
+The .NET SDK now ships an ASP.NET Core dependency injection package. A single method registers the main client and all sub-clients, so you don't have to wire it up by hand.
+
+---
+
+## The Supabase .NET SDK is now officially supported
+
+2026-10-09 · New Feature · supabase-dotnet · [supabase.com/changelog/supabase-dotnet-official-support](https://supabase.com/changelog/supabase-dotnet-official-support)
+
+The .NET SDK for Supabase is now officially supported. It's the recommended way to build on Supabase from any .NET platform: ASP.NET, Blazor, MAUI, Unity, Azure, and more.
+
+---
+
+## Status page moves to incident.io
+
+2026-10-08 · Improvement · Website · [supabase.com/changelog/status-page-migration](https://supabase.com/changelog/status-page-migration)
+
+status.supabase.com now runs on incident.io. Email subscribers carry over. SMS, Slack, webhook, and RSS subscribers must resubscribe; the new page supports only Email, RSS, and Slack.
+
+---
+
+## Scoped personal access tokens are now generally available
+
+2026-10-06 · New Feature · Platform, Security, CLI, AI · [supabase.com/changelog/scoped-personal-access-tokens-ga](https://supabase.com/changelog/scoped-personal-access-tokens-ga)
+
+Scoped personal access tokens are now available to everyone. Limit a token to specific projects or organizations and grant only the permissions it needs on the Management API, MCP server, and CLI.
+
+---
+
+## Organization invites support the No access role
+
+2026-10-05 · Improvement · Platform, Studio, Security · [supabase.com/changelog/no-access-org-role](https://supabase.com/changelog/no-access-org-role)
+
+Organization invites on Team and Enterprise plans now support the No access role, so admins can default new members to zero project access instead of Read-only access to every project.
+
+---
+
+## Framework adapters in @supabase/server are deprecated
+
+2026-10-05 · Deprecation · supabase-server · [supabase.com/changelog/supabase-server-adapters-deprecated](https://supabase.com/changelog/supabase-server-adapters-deprecated)
+
+The Hono, H3, Elysia, and NestJS adapters in @supabase/server are deprecated and will be removed on December 1, 2026. Move to the framework bridges in the frameworks guide.
+
+---
+
+## [Private Alpha] Multigres: operating system for Postgres
+
+2026-10-01 · New Feature · Database, Multigres · [supabase.com/changelog/multigres-private-alpha](https://supabase.com/changelog/multigres-private-alpha)
+
+Run Supabase with multi-AZ high availabilit

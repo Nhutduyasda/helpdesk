@@ -9,6 +9,7 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "test": "node --experimental-strip-types --test tests/*.test.mjs",
+    "test:details": "node scripts/phase5-details-qa.mjs",
     "lint:itcare": "eslint src/api/itcare src/context/itcare src/integrations/supabase src/services/itcare src/views/itcare src/hooks/use-online.ts src/layouts/full/vertical/header/Header.tsx src/layouts/full/vertical/sidebar/Sidebar.tsx src/routes/Router.tsx src/main.tsx src/api/global-fetcher.ts vite.config.ts --max-warnings 0"
   },
   "dependencies": {

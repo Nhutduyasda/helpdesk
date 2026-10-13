@@ -4,9 +4,10 @@ const { chromium } = require(
 );
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
+const qaOutput = process.env.QA_OUTPUT || 'docs/phase-5';
 (async () => {
   const browser = await chromium.launch({ channel: "msedge", headless: true });
-  fs.mkdirSync("docs/phase-5/screenshots", { recursive: true });
+  fs.mkdirSync(`${qaOutput}/screenshots`, { recursive: true });
   const results = [];
   try {
     for (const width of [390, 1440]) {
@@ -68,7 +69,7 @@ const fs = require("node:fs");
       );
       assert.equal(ids[0], ids[1]);
       await page.screenshot({
-        path: `docs/phase-5/screenshots/confirmation-${width}.png`,
+        path: `${qaOutput}/screenshots/confirmation-${width}.png`,
         fullPage: true,
       });
       await page.goto("http://127.0.0.1:5176/report");
@@ -80,7 +81,7 @@ const fs = require("node:fs");
         ),
       );
       await page.screenshot({
-        path: `docs/phase-5/screenshots/form-${width}.png`,
+        path: `${qaOutput}/screenshots/form-${width}.png`,
         fullPage: true,
       });
       const beforeEmpty = requests.length;
@@ -122,7 +123,7 @@ const fs = require("node:fs");
       await page.close();
     }
     fs.writeFileSync(
-      "docs/phase-5/browser-results.json",
+      `${qaOutput}/browser-results.json`,
       JSON.stringify(results, null, 2),
     );
     console.log(JSON.stringify(results));
