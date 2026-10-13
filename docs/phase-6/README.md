@@ -2,6 +2,8 @@
 
 Assessment: 2026-10-13 (Asia/Saigon). **IN PROGRESS; repository work ready for review. Public employee pilot remains NO-GO.**
 
+Phase 6.1 update: architecture C was conditionally approved for repository/local work. The [feasibility checkpoint](feasibility-report.md) confirms Pages same-origin routing and actual local workerd compatibility, but maximum image CPU is substantially above Workers Free's 10 ms budget. Per owner condition A.6, production ingress/frontend implementation stops pending a new feasibility/design decision. Only local measurement tooling and verification-only Phase 6 CI were added; no cloud changes.
+
 Remote heads verified with `git ls-remote` after fetch: Phase 5 and Phase 6 both `8232ab0ede155fb9f73f4d5ff70ac4387ee17ac4`; main `0b439d3cf5493840eeb79c97ba1c027932e5701d`. Work branch: `codex/phase-6-operational-readiness`. Initial local checkout was Phase 5 at the same SHA. Existing uncommitted Phase 5 QA reports/images were preserved and excluded from this delivery. They are audit inputs, not new Phase 6 verification.
 
 ## Baseline audit
@@ -30,6 +32,6 @@ The most recent Phase 5 acceptance report supersedes older isolated QA statement
 - [Acceptance checklist and evidence levels](acceptance-checklist.md)
 - [Local validation results](validation-report.md)
 
-Only documentation and a synthetic handler regression are implemented. No ingress architecture, credentials, deployments, cloud settings, persistent fixtures, migrations, cleanup, DNS changes, invitations or paid upgrades are authorized by this work. Phase 4 and Phase 5 staging stay intact. PR base must be Phase 5; neither branch merges into main.
+Initial delivery implemented documentation and a synthetic handler regression. Phase 6.1 adds the local-only feasibility probe and verification-only CI. Production ingress implementation stops on the documented Free feasibility condition. No credentials, deployments, cloud settings, persistent fixtures, migrations, cleanup, DNS changes, invitations or paid upgrades are authorized by this work. Phase 4 and Phase 5 staging stay intact. PR base must be Phase 5; neither branch merges into main.
 
-Next checkpoint: owner reviews the proposed architecture, scope, cost, risks and rollback in the security decision. Architecture implementation stops pending approval. Approval to code is distinct from approval to provision/deploy and to create live fixtures.
+Next checkpoint: owner chooses the next local optimization/design/budget evaluation after reviewing the feasibility blocker. Architecture C approval does not waive the Free safety condition. Approval to code is distinct from approval to provision/deploy and to create live fixtures.

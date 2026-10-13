@@ -1,0 +1,63 @@
+
+> shadcn-dashboard-free@1.0.0 test
+> node --experimental-strip-types --test tests/*.test.mjs
+
+✔ build gate rejects legacy service-role JWT without printing its value (15.7634ms)
+✔ build gate scans HTML, maps and nested assets, not only top-level JS (26.8762ms)
+✔ build gate catches private values even when incorrectly VITE-prefixed (7.7304ms)
+✔ build gate allows public publishable and legacy anon keys (29.1626ms)
+✔ A: employee reads own submitted ticket but not another employee draft (1606.6888ms)
+✔ B: reserved upload path is private and rejects guessed/cross-owner uploads (18.4123ms)
+✔ C/D/J: browser cannot change ownership, status, role, history or disable accounts directly (7.2136ms)
+✔ E: inactive user cannot query business data or invoke mutations (3.2259ms)
+✔ F/M: IT can read all submitted tickets and update atomically; comments/events are IT-only (16.1118ms)
+✔ G: unauthenticated roles have no table/RPC access (2.2898ms)
+✔ H: repeated request IDs and operation IDs do not duplicate records (10.8612ms)
+✔ I: missing upload or wrong MIME/size cannot finalize; retry remains a draft (10.3106ms)
+✔ failed IT mutation rolls back comment and history; resolve then closed is read-only (12.8292ms)
+✔ account deactivation is enforced immediately even with an existing user identity (4.8406ms)
+✔ private bucket, size/type limits and all business tables have RLS enabled (2.2331ms)
+✔ A: other employee submitted ticket is hidden, not just their draft (3.3643ms)
+✔ metadata cannot provision IT privileges; distinct requests have unique server numbers (6.8616ms)
+✔ Phase 5: only server can reserve; retry is stable and changed content rejected (13.712ms)
+✔ Phase 5: anonymous cannot list/read/write tickets or invoke IT operations (10.7604ms)
+✔ Phase 5: Admin receives public submission, lifecycle works and old ownership is intact (10.4565ms)
+✔ Phase 5: image-only finalization waits for private object; employee and anon cannot read it (13.9729ms)
+✔ Phase 5: layered ingress limiter is persistent and server-only (115.397ms)
+✔ Phase 5: only new reservations use office capacity; retries work at capacity and invalid input rolls back (11.1035ms)
+✔ Storage duplicate 400/409 allows immutable retry to continue to verified finalization (2.5228ms)
+✔ Storage rejects permission, MIME and network errors without masking them as retries (1.3662ms)
+✔ notification recipient matrix: IT receives new ticket, A receives IT reply/resolution, B receives none (27.3455ms)
+✔ public submission with no profile actor notifies IT only (0.4032ms)
+✔ inactive recipients and draft tickets receive no notifications (0.3111ms)
+✔ isolated preview refuses Phase 4, mismatched commits and frontend secrets (4.0342ms)
+✔ request workflow YAML guards both jobs against missing approval, other refs/events and changed commits (85.3848ms)
+✔ isolated CSP preserves private caching and restrictive directives (1.548ms)
+✔ preview request is approval-gated, environment-gated and separate from Phase 4; no database deployment (2.0061ms)
+✔ stalled intake stream is cancelled when its server deadline expires (53.5448ms)
+✔ consumed challenge is rejected before reservation; fresh challenge permits same-request retry (mock verifier) (76.4878ms)
+✔ handler returns only reference, private immutable images survive response-loss retries (7.2239ms)
+✔ bot failure, mismatched hostname/action and invalid fields create no reservation (6.7549ms)
+✔ rate and storage failures fail closed, unapproved origins are forbidden (3.6733ms)
+✔ malformed/bot/spoofed requests do not use verified office allowance (11.1014ms)
+✔ invalid images and failed verifier do not reserve; limiter errors fail closed (2.1709ms)
+✔ cheap server checks precede body/DB work and capacity rejection reports retry (2.0239ms)
+✔ public intake requires identity and description OR an image (2.3213ms)
+✔ server rejects spoofed MIME, empty and oversized attachments (0.4783ms)
+✔ streaming body cap applies without Content-Length (27.2993ms)
+✔ public intake headers keep geolocation blocked and private content uncached (13.7855ms)
+✔ browser QA uses available Chromium on Linux and retains Edge on Windows (2.0515ms)
+✔ QA_OUTPUT isolates new staging evidence from historical Phase 3 output (7.5501ms)
+✔ upload failure never finalizes, retry reuses reservation and only metadata reaches database (11.7169ms)
+✔ already submitted retry skips uploads and finalization (0.4543ms)
+✔ file count, spoofed image bytes and invalid formats rejected before writes (0.6172ms)
+✔ update uses database identity and stable internal status codes, never a browser actor (0.4925ms)
+✔ configuration rejects placeholders, insecure remote URLs and privileged JWTs (0.4631ms)
+ℹ tests 51
+ℹ suites 0
+ℹ pass 51
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2090.0028

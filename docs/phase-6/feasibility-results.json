@@ -1,0 +1,420 @@
+{
+  "runtime": "4.20260730.0",
+  "workerd": "1.20260730.1",
+  "esbuild": "0.28.2",
+  "compatibilityDate": "2026-08-06",
+  "platform": "win32",
+  "node": "v24.19.0",
+  "backend": "in-memory synthetic gateway/verifier; upload records lengths only, no byte copies; no real HTTP dependency evidence",
+  "measurement": "Inspector CPU sampling excludes idle/program/root. Sample estimate is not Cloudflare billed CPU. Heap/backing storage snapshots share one isolate with natural GC, not total isolate peak or per-request memory. Local runtime does not enforce the hosted Free CPU limit.",
+  "cases": [
+    {
+      "images": 0,
+      "bytesPerImage": 0,
+      "repetitions": [
+        {
+          "payloadBytes": 2948,
+          "wallMs": 19.282299999999964,
+          "sampledActiveMs": 13.965,
+          "byFunctionUs": {
+            "fetch": 12798,
+            "read": 543,
+            "(anonymous)": 624
+          },
+          "heapBefore": {
+            "usedSize": 412540,
+            "totalSize": 786432,
+            "embedderHeapUsedSize": 257936,
+            "backingStorageSize": 0
+          },
+          "heapAfter": {
+            "usedSize": 487848,
+            "totalSize": 1572864,
+            "embedderHeapUsedSize": 257936,
+            "backingStorageSize": 13520
+          },
+          "status": 200,
+          "uploads": 0
+        },
+        {
+          "payloadBytes": 2948,
+          "wallMs": 4.9220000000000255,
+          "sampledActiveMs": 3.13,
+          "byFunctionUs": {
+            "get": 3130
+          },
+          "heapBefore": {
+            "usedSize": 487848,
+            "totalSize": 1572864,
+            "embedderHeapUsedSize": 257936,
+            "backingStorageSize": 13520
+          },
+          "heapAfter": {
+            "usedSize": 515200,
+            "totalSize": 1572864,
+            "embedderHeapUsedSize": 257936,
+            "backingStorageSize": 27040
+          },
+          "status": 200,
+          "uploads": 0
+        },
+        {
+          "payloadBytes": 2948,
+          "wallMs": 4.692800000000034,
+          "sampledActiveMs": 3.116,
+          "byFunctionUs": {
+            "(anonymous)": 3116
+          },
+          "heapBefore": {
+            "usedSize": 515200,
+            "totalSize": 1572864,
+            "embedderHeapUsedSize": 257936,
+            "backingStorageSize": 27040
+          },
+          "heapAfter": {
+            "usedSize": 545620,
+            "totalSize": 1835008,
+            "embedderHeapUsedSize": 257936,
+            "backingStorageSize": 40560
+          },
+          "status": 200,
+          "uploads": 0
+        }
+      ]
+    },
+    {
+      "images": 1,
+      "bytesPerImage": 65536,
+      "repetitions": [
+        {
+          "payloadBytes": 68622,
+          "wallMs": 5.728099999999927,
+          "sampledActiveMs": 0,
+          "byFunctionUs": {},
+          "heapBefore": {
+            "usedSize": 545620,
+            "totalSize": 1835008,
+            "embedderHeapUsedSize": 257936,
+            "backingStorageSize": 40560
+          },
+          "heapAfter": {
+            "usedSize": 597028,
+            "totalSize": 1835008,
+            "embedderHeapUsedSize": 257936,
+            "backingStorageSize": 316516
+          },
+          "status": 200,
+          "uploads": 1
+        },
+        {
+          "payloadBytes": 68622,
+          "wallMs": 5.552000000000021,
+          "sampledActiveMs": 1.218,
+          "byFunctionUs": {
+            "digest": 1218
+          },
+          "heapBefore": {
+            "usedSize": 597028,
+            "totalSize": 1835008,
+            "embedderHeapUsedSize": 257936,
+            "backingStorageSize": 316516
+          },
+          "heapAfter": {
+            "usedSize": 645660,
+            "totalSize": 1835008,
+            "embedderHeapUsedSize": 257936,
+            "backingStorageSize": 592472
+          },
+          "status": 200,
+          "uploads": 1
+        },
+        {
+          "payloadBytes": 68622,
+          "wallMs": 4.667699999999968,
+          "sampledActiveMs": 2.979,
+          "byFunctionUs": {
+            "read": 2400,
+            "validImage": 579
+          },
+          "heapBefore": {
+            "usedSize": 645660,
+            "totalSize": 1835008,
+            "embedderHeapUsedSize": 257936,
+            "backingStorageSize": 592472
+          },
+          "heapAfter": {
+            "usedSize": 693340,
+            "totalSize": 1835008,
+            "embedderHeapUsedSize": 257936,
+            "backingStorageSize": 868428
+          },
+          "status": 200,
+          "uploads": 1
+        }
+      ]
+    },
+    {
+      "images": 3,
+      "bytesPerImage": 65536,
+      "repetitions": [
+        {
+          "payloadBytes": 199970,
+          "wallMs": 5.578499999999963,
+          "sampledActiveMs": 4.134,
+          "byFunctionUs": {
+            "boundedBody": 2386,
+            "Request": 611,
+            "(anonymous)": 553,
+            "digest": 584
+          },
+          "heapBefore": {
+            "usedSize": 693340,
+            "totalSize": 1835008,
+            "embedderHeapUsedSize": 257936,
+            "backingStorageSize": 868428
+          },
+          "heapAfter": {
+            "usedSize": 792028,
+            "totalSize": 1835008,
+            "embedderHeapUsedSize": 257936,
+            "backingStorageSize": 1669258
+          },
+          "status": 200,
+          "uploads": 3
+        },
+        {
+          "payloadBytes": 199970,
+          "wallMs": 6.676899999999932,
+          "sampledActiveMs": 4.918,
+          "byFunctionUs": {
+            "boundedBody": 3757,
+            "digest": 1161
+          },
+          "heapBefore": {
+            "usedSize": 792028,
+            "totalSize": 1835008,
+            "embedderHeapUsedSize": 257936,
+            "backingStorageSize": 1669258
+          },
+          "heapAfter": {
+            "usedSize": 898388,
+            "totalSize": 2097152,
+            "embedderHeapUsedSize": 257936,
+            "backingStorageSize": 2470088
+          },
+          "status": 200,
+          "uploads": 3
+        },
+        {
+          "payloadBytes": 199970,
+          "wallMs": 6.286699999999996,
+          "sampledActiveMs": 4.94,
+          "byFunctionUs": {
+            "Request": 3814,
+            "digest": 569,
+            "(anonymous)": 557
+          },
+          "heapBefore": {
+            "usedSize": 898388,
+            "totalSize": 2097152,
+            "embedderHeapUsedSize": 257936,
+            "backingStorageSize": 2470088
+          },
+          "heapAfter": {
+            "usedSize": 997608,
+            "totalSize": 2359296,
+            "embedderHeapUsedSize": 257936,
+            "backingStorageSize": 3270918
+          },
+          "status": 200,
+          "uploads": 3
+        }
+      ]
+    },
+    {
+      "images": 1,
+      "bytesPerImage": 5242880,
+      "repetitions": [
+        {
+          "payloadBytes": 5245966,
+          "wallMs": 54.463300000000004,
+          "sampledActiveMs": 48.874,
+          "byFunctionUs": {
+            "boundedBody": 10439,
+            "read": 13756,
+            "(garbage collector)": 2467,
+            "(anonymous)": 4882,
+            "Request": 559,
+            "formData": 574,
+            "arrayBuffer": 1153,
+            "digest": 15044
+          },
+          "heapBefore": {
+            "usedSize": 997608,
+            "totalSize": 2359296,
+            "embedderHeapUsedSize": 257936,
+            "backingStorageSize": 3270918
+          },
+          "heapAfter": {
+            "usedSize": 2075688,
+            "totalSize": 4980736,
+            "embedderHeapUsedSize": 515856,
+            "backingStorageSize": 21771766
+          },
+          "status": 200,
+          "uploads": 1
+        },
+        {
+          "payloadBytes": 5245966,
+          "wallMs": 58.95480000000009,
+          "sampledActiveMs": 49.725,
+          "byFunctionUs": {
+            "read": 18298,
+            "(anonymous)": 6716,
+            "(garbage collector)": 1257,
+            "boundedBody": 4253,
+            "Request": 1289,
+            "formData": 567,
+            "getAll": 607,
+            "arrayBuffer": 1106,
+            "digest": 15632
+          },
+          "heapBefore": {
+            "usedSize": 2075688,
+            "totalSize": 4980736,
+            "embedderHeapUsedSize": 515856,
+            "backingStorageSize": 21771766
+          },
+          "heapAfter": {
+            "usedSize": 3545592,
+            "totalSize": 6029312,
+            "embedderHeapUsedSize": 773776,
+            "backingStorageSize": 37507588
+          },
+          "status": 200,
+          "uploads": 1
+        },
+        {
+          "payloadBytes": 5245966,
+          "wallMs": 50.39580000000001,
+          "sampledActiveMs": 45.926,
+          "byFunctionUs": {
+            "boundedBody": 10149,
+            "read": 12775,
+            "get": 598,
+            "Request": 572,
+            "(anonymous)": 5485,
+            "arrayBuffer": 1246,
+            "digest": 15101
+          },
+          "heapBefore": {
+            "usedSize": 3545592,
+            "totalSize": 6029312,
+            "embedderHeapUsedSize": 773776,
+            "backingStorageSize": 37507588
+          },
+          "heapAfter": {
+            "usedSize": 5291224,
+            "totalSize": 7340032,
+            "embedderHeapUsedSize": 1031696,
+            "backingStorageSize": 58492922
+          },
+          "status": 200,
+          "uploads": 1
+        }
+      ]
+    },
+    {
+      "images": 3,
+      "bytesPerImage": 5242880,
+      "repetitions": [
+        {
+          "payloadBytes": 15732002,
+          "wallMs": 158.0729,
+          "sampledActiveMs": 145.852,
+          "byFunctionUs": {
+            "boundedBody": 35044,
+            "read": 32519,
+            "(garbage collector)": 2369,
+            "(anonymous)": 20434,
+            "Request": 2307,
+            "formData": 639,
+            "arrayBuffer": 3308,
+            "digest": 49232
+          },
+          "heapBefore": {
+            "usedSize": 5291224,
+            "totalSize": 7340032,
+            "embedderHeapUsedSize": 1031696,
+            "backingStorageSize": 58492922
+          },
+          "heapAfter": {
+            "usedSize": 8781480,
+            "totalSize": 11796480,
+            "embedderHeapUsedSize": 1805456,
+            "backingStorageSize": 89936978
+          },
+          "status": 200,
+          "uploads": 3
+        },
+        {
+          "payloadBytes": 15732002,
+          "wallMs": 159.1639,
+          "sampledActiveMs": 140.826,
+          "byFunctionUs": {
+            "(garbage collector)": 13697,
+            "read": 34321,
+            "boundedBody": 18730,
+            "(anonymous)": 20204,
+            "Request": 2831,
+            "formData": 543,
+            "arrayBuffer": 3806,
+            "digest": 46694
+          },
+          "heapBefore": {
+            "usedSize": 8781480,
+            "totalSize": 11796480,
+            "embedderHeapUsedSize": 1805456,
+            "backingStorageSize": 89936978
+          },
+          "heapAfter": {
+            "usedSize": 4436824,
+            "totalSize": 8912896,
+            "embedderHeapUsedSize": 637664,
+            "backingStorageSize": 62928964
+          },
+          "status": 200,
+          "uploads": 3
+        },
+        {
+          "payloadBytes": 15732002,
+          "wallMs": 148.95550000000003,
+          "sampledActiveMs": 134.114,
+          "byFunctionUs": {
+            "boundedBody": 30093,
+            "read": 32219,
+            "(anonymous)": 18674,
+            "(garbage collector)": 2653,
+            "Request": 2850,
+            "arrayBuffer": 3434,
+            "digest": 44191
+          },
+          "heapBefore": {
+            "usedSize": 4436824,
+            "totalSize": 8912896,
+            "embedderHeapUsedSize": 637664,
+            "backingStorageSize": 62928964
+          },
+          "heapAfter": {
+            "usedSize": 6959484,
+            "totalSize": 14417920,
+            "embedderHeapUsedSize": 1418592,
+            "backingStorageSize": 94385510
+          },
+          "status": 200,
+          "uploads": 3
+        }
+      ]
+    }
+  ]
+}

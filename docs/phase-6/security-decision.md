@@ -1,6 +1,6 @@
 # ADR-006 — anonymous intake execution boundary
 
-Status: proposed, awaiting owner approval; 2026-10-13. No architecture code or cloud configuration implemented.
+Status: architecture C conditionally approved for repository/local implementation, 2026-10-13. Owner requires Free feasibility before extensive changes. [Local feasibility](feasibility-report.md) fails to establish the 10 ms CPU budget at existing maximum images; production implementation stops. No architecture endpoint or cloud configuration implemented.
 
 ## Threat and constraints
 
