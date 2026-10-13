@@ -1,15 +1,7 @@
-name: ITCare Phase 5 isolated preview (approval required)
+name: ITCare Phase 5 isolated preview (approved request ref)
 on:
-  workflow_dispatch:
-    inputs:
-      approved_commit:
-        description: 'Full Phase 5 SHA explicitly approved for this deployment'
-        required: true
-        type: string
-      approval:
-        description: 'Type DEPLOY_ISOLATED_PHASE5 after reviewing the staging checklist'
-        required: true
-        type: string
+  push:
+    branches: [codex/phase-5-preview-request]
 permissions:
   contents: read
 concurrency:
@@ -18,13 +10,16 @@ concurrency:
 jobs:
   prepare:
     if: >-
-      github.ref == 'refs/heads/codex/phase-5-passwordless-reporting' &&
-      inputs.approval == 'DEPLOY_ISOLATED_PHASE5' &&
+      github.event_name == 'push' &&
+      github.event.deleted == false &&
+      github.ref == 'refs/heads/codex/phase-5-preview-request' &&
+      vars.ITCARE_PHASE5_DEPLOY_APPROVAL == 'DEPLOY_ISOLATED_PHASE5' &&
+      vars.ITCARE_PHASE5_APPROVED_SHA == github.sha &&
       vars.ITCARE_PHASE5_DEPLOY_ENABLED == 'true'
     environment: itcare-phase5-preview
     runs-on: ubuntu-latest
     env:
-      APPROVED_COMMIT: ${{ inputs.approved_commit }}
+      APPROVED_COMMIT: ${{ vars.ITCARE_PHASE5_APPROVED_SHA }}
       VITE_SUPABASE_URL: ${{ vars.ITCARE_PHASE5_SUPABASE_URL }}
       VITE_SUPABASE_PUBLISHABLE_KEY: ${{ vars.ITCARE_PHASE5_SUPABASE_PUBLISHABLE_KEY }}
       VITE_ITCARE_DEPARTMENTS: ${{ vars.ITCARE_PHASE5_DEPARTMENTS }}
@@ -32,6 +27,11 @@ jobs:
       VITE_ITCARE_DEMO: 'false'
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Verify checkout is the approved event commit
+        run: test "$(git rev-parse HEAD)" = "$APPROVED_COMMIT"
       - name: Verify revision and isolated public configuration
         run: node scripts/phase5-preview-config.mjs validate
       - uses: actions/setup-node@v4
@@ -56,6 +56,13 @@ jobs:
           retention-days: 7
   deploy:
     needs: prepare
+    if: >-
+      github.event_name == 'push' &&
+      github.event.deleted == false &&
+      github.ref == 'refs/heads/codex/phase-5-preview-request' &&
+      vars.ITCARE_PHASE5_DEPLOY_APPROVAL == 'DEPLOY_ISOLATED_PHASE5' &&
+      vars.ITCARE_PHASE5_APPROVED_SHA == github.sha &&
+      vars.ITCARE_PHASE5_DEPLOY_ENABLED == 'true'
     environment: itcare-phase5-preview
     runs-on: ubuntu-latest
     permissions:

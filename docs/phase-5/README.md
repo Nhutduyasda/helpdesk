@@ -50,7 +50,7 @@ Local SQL uses PGlite with mocked auth/storage catalog tables; HTTP tests inject
 
 ## Exact deployment review plan — approval required
 
-The current exact plan is [isolated-staging-checklist.md](isolated-staging-checklist.md). Prefer a dedicated Supabase test project and the proposed separate Pages project `itcare-phase5-test`. The original migration plan targeting the Phase 4 project is superseded. The manual preview workflow has explicit enable/confirmation/commit/environment gates and contains no migrations, Edge deployments or Auth changes. It must not be dispatched until those approvals and environment protections are configured.
+The current exact plan is [isolated-staging-checklist.md](isolated-staging-checklist.md). Prefer a dedicated Supabase test project and the proposed separate Pages project `itcare-phase5-test`. The original migration plan targeting the Phase 4 project is superseded. The operator-request preview workflow has explicit enable/confirmation/commit/environment gates and contains no migrations, Edge deployments or Auth changes. It must not be requested until those approvals and environment protections are configured.
 
 Until these steps have approval and real security evidence, **NO-GO for a live staging pilot or production readiness**. **GO for code review and isolated local testing**. Roll back only the isolated preview/function exposure and disable its deployment gate; keep migration history/data and review database cleanup separately. Phase 4 remains unchanged.
 
