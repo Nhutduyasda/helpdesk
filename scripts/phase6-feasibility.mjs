@@ -1,19 +1,75 @@
 // Real local workerd, simulated Supabase/Turnstile. No outbound/live calls.
 import { createRequire } from 'node:module';
 import { writeFile } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
 import { performance } from 'node:perf_hooks';
 import assert from 'node:assert/strict';
 const require = createRequire(new URL('../node_modules/.phase6-tools/package.json', import.meta.url));
-const { Miniflare } = require('miniflare');
+const { Miniflare, convertV4MiniflareOptions } = require('miniflare');
 const { build } = require('esbuild');
-const bundle = await build({ entryPoints: ['scripts/phase6-feasibility-worker.ts'], bundle: true, write: false, format: 'esm', platform: 'browser' });
-const mf = new Miniflare({ modules: true, script: bundle.outputFiles[0].text, compatibilityDate: '2026-08-06', inspectorPort: 9238,
-  outboundService: () => new Response('Local probe prohibits external HTTP', { status: 403 }),
+const handlerPath = resolve('supabase/functions/public-intake/handler.ts');
+const instrument = (source) => {
+  const edits = [
+    ['const raw = await boundedBody(request);', "const raw = await __phase6Time('body_buffer', () => boundedBody(request));"],
+    ['.formData();', ".formData());"], // expression is wrapped below, with checked source shape
+    ['if (!validImage(photo.type, bytes))', "if (!(await __phase6Time('file_signature', () => validImage(photo.type, bytes))))"],
+    ['sha256: await digest(bytes),', "sha256: await __phase6Time('file_hash', () => digest(bytes)),"],
+    ['const hash = await digest(', "const hash = await __phase6Time('request_hash', () => digest("],
+    ['const reservation = await client.rpc("prepare_public_ticket", {', "const reservation = await __phase6Time('reservation', () => client.rpc(\"prepare_public_ticket\", {"],
+    ['const upload = await client.storage.from("incident-photos").upload(', "const upload = await __phase6Time('storage_upload', () => client.storage.from(\"incident-photos\").upload("],
+    ['const existing = await client.storage.from("incident-photos")', "const existing = await __phase6Time('storage_retry_download', () => client.storage.from(\"incident-photos\")"],
+    ['const receipt = await client.rpc("finalize_public_ticket", {', "const receipt = await __phase6Time('finalization', () => client.rpc(\"finalize_public_ticket\", {"],
+  ];
+  let transformed = source;
+  const countOf = (value, needle) => value.split(needle).length - 1;
+  for (const [needle, replacement] of edits.filter(([needle]) => needle !== '.formData();')) {
+    assert.equal(countOf(transformed, needle), 1, `Instrumentation anchor must be unique: ${needle}`);
+    transformed = transformed.replace(needle, replacement);
+  }
+  const multipartAnchor = 'const form = await new Request(request.url, {';
+  assert.equal(countOf(transformed, multipartAnchor), 1);
+  transformed = transformed.replace(multipartAnchor, "const form = await __phase6Time('multipart_parse', () => new Request(request.url, {");
+  const closeForm = '      }).formData();';
+  assert.equal(countOf(transformed, closeForm), 1);
+  transformed = transformed.replace(closeForm, '      }).formData());');
+  const closeHash = '        ),\n      );\n      const reservation =';
+  assert.equal(countOf(transformed, closeHash), 1);
+  transformed = transformed.replace(closeHash, '        ),\n      ));\n      const reservation =');
+  const closeReservation = '        p_files: manifest,\n      });\n      if (reservation.error';
+  assert.equal(countOf(transformed, closeReservation), 1);
+  transformed = transformed.replace(closeReservation, '        p_files: manifest,\n      }));\n      if (reservation.error');
+  const closeUpload = '            { contentType: blob.type, upsert: false },\n          );\n          if (upload.error';
+  assert.equal(countOf(transformed, closeUpload), 1);
+  transformed = transformed.replace(closeUpload, '            { contentType: blob.type, upsert: false },\n          ));\n          if (upload.error');
+  const closeDownload = '              .download(a.path);\n            if (';
+  assert.equal(countOf(transformed, closeDownload), 1);
+  transformed = transformed.replace(closeDownload, '              .download(a.path));\n            if (');
+  const closeFinalize = '        p_hash: hash,\n      });\n      if (receipt.error';
+  assert.equal(countOf(transformed, closeFinalize), 1);
+  transformed = transformed.replace(closeFinalize, '        p_hash: hash,\n      }));\n      if (receipt.error');
+  const trailer = "\nasync function __phase6Time(label: string, operation: () => unknown) { const start = performance.now(); try { return await operation(); } finally { (globalThis as typeof globalThis & { __phase6Stages?: unknown[] }).__phase6Stages?.push({ label, ms: performance.now() - start }); } }\n";
+  return trailer + transformed;
+};
+const bundle = await build({
+  entryPoints: ['scripts/phase6-feasibility-worker.ts'], bundle: true, write: false, format: 'esm', platform: 'browser',
+  plugins: [{ name: 'phase6-instrument-handler', setup(buildApi) {
+    buildApi.onLoad({ filter: /handler\.ts$/ }, async (args) => {
+      if (resolve(args.path) !== handlerPath) return;
+      return { contents: instrument(await readFile(args.path, 'utf8')), loader: 'ts' };
+    });
+  } }],
 });
+const mf = new Miniflare(convertV4MiniflareOptions({
+  script: bundle.outputFiles[0].text, modules: true, compatibilityDate: '2026-08-06', inspectorPort: 9238,
+  unsafeModuleFallbackService: () => new Response('Local probe prohibits external HTTP', { status: 403 }),
+}));
 let socket;
 try {
   await mf.ready;
-  const targets = await (await fetch('http://127.0.0.1:9238/json/list')).json();
+  const inspector = await mf.getInspectorURL();
+  const inspectorHttp = new URL(`http://${inspector.host}/json/list`);
+  const targets = await (await fetch(inspectorHttp)).json();
   socket = new WebSocket(targets.find(t => t.id === 'core:user:').webSocketDebuggerUrl);
   await new Promise((resolve, reject) => { socket.addEventListener('open', resolve, { once: true }); socket.addEventListener('error', reject, { once: true }); });
   let sequence = 0;
@@ -61,11 +117,11 @@ try {
           byFunctionUs[label] = (byFunctionUs[label] || 0) + profile.timeDeltas[i];
         }
       }
-      repetitions.push({ payloadBytes: payload.length, wallMs, sampledActiveMs: activeSampleUs / 1000, byFunctionUs, heapBefore, heapAfter, status: result.status, uploads: result.uploads });
+      repetitions.push({ payloadBytes: payload.length, wallMs, sampledActiveMs: activeSampleUs / 1000, byFunctionUs, stages: result.stages, heapBefore, heapAfter, status: result.status, uploads: result.uploads });
     }
     cases.push({ images: count, bytesPerImage: size, repetitions });
   }
-  const report = { runtime: require('miniflare/package.json').version, workerd: require('workerd/package.json').version, esbuild: require('esbuild/package.json').version, compatibilityDate: '2026-08-06', platform: process.platform, node: process.version, backend: 'in-memory synthetic gateway/verifier; upload records lengths only, no byte copies; no real HTTP dependency evidence', measurement: 'Inspector CPU sampling excludes idle/program/root. Sample estimate is not Cloudflare billed CPU. Heap/backing storage snapshots share one isolate with natural GC, not total isolate peak or per-request memory. Local runtime does not enforce the hosted Free CPU limit.', cases };
+  const report = { runtime: require('miniflare/package.json').version, workerd: require('workerd/package.json').version, esbuild: require('esbuild/package.json').version, compatibilityDate: '2026-08-06', platform: process.platform, node: process.version, instrumentation: 'The exact checked-out handler source is instrumented in-memory at checked unique stage anchors before bundling; repository handler file is not modified.', backend: 'in-memory synthetic gateway/verifier; upload records lengths only, no byte copies; outbound HTTP is blocked; no real provider HTTP evidence', measurement: 'Inspector CPU sampling excludes idle/program/root. Sample estimate is not Cloudflare billed CPU. Stage durations are local wall intervals with synchronous fake dependencies, not Cloudflare per-function CPU; separate CPU samples identify hotspots. Heap/backing storage snapshots share one isolate with natural GC, not total isolate peak or per-request memory. Local runtime does not enforce hosted Free CPU.', cases };
   await writeFile('docs/phase-6/feasibility-results.json', JSON.stringify(report, null, 2) + '\n');
   console.log(JSON.stringify(report, null, 2));
 } finally { socket?.close(); await mf.dispose(); }

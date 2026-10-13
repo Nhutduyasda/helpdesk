@@ -3,6 +3,7 @@ import { intakeHandler } from '../supabase/functions/public-intake/handler.ts';
 
 export default {
   async fetch(request: Request) {
+    (globalThis as typeof globalThis & { __phase6Stages?: unknown[] }).__phase6Stages = [];
     const calls: string[] = [];
     let files: { content_type: string; file_size: number; sha256: string }[] = [];
     const objects = new Map<string, number>();
@@ -26,6 +27,6 @@ export default {
     // Bundle erases the existing Supabase-only type; runtime surface is mocked.
     const handler = intakeHandler(client as never, env, async () => Response.json({ success: true, action: 'incident-report', hostname: 'office.test' }));
     const response = await handler(request);
-    return Response.json({ status: response.status, receipt: await response.json(), calls, uploads: objects.size });
+    return Response.json({ status: response.status, receipt: await response.json(), calls, uploads: objects.size, stages: (globalThis as typeof globalThis & { __phase6Stages?: unknown[] }).__phase6Stages });
   },
 };

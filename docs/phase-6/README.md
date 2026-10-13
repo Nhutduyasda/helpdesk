@@ -4,6 +4,8 @@ Assessment: 2026-10-13 (Asia/Saigon). **IN PROGRESS; repository work ready for r
 
 Phase 6.1 update: architecture C was conditionally approved for repository/local work. The [feasibility checkpoint](feasibility-report.md) confirms Pages same-origin routing and actual local workerd compatibility, but maximum image CPU is substantially above Workers Free's 10 ms budget. Per owner condition A.6, production ingress/frontend implementation stops pending a new feasibility/design decision. Only local measurement tooling and verification-only Phase 6 CI were added; no cloud changes.
 
+Final bounded round used audit-clean Miniflare 5, instrumented per-stage timing, and kept all existing limits. The remaining Free gap is over 120 ms for 3×5 MiB; recommendation B is to evaluate a Paid implementation, subject to memory/concurrency validation. No cloud or Paid plan change.
+
 Remote heads verified with `git ls-remote` after fetch: Phase 5 and Phase 6 both `8232ab0ede155fb9f73f4d5ff70ac4387ee17ac4`; main `0b439d3cf5493840eeb79c97ba1c027932e5701d`. Work branch: `codex/phase-6-operational-readiness`. Initial local checkout was Phase 5 at the same SHA. Existing uncommitted Phase 5 QA reports/images were preserved and excluded from this delivery. They are audit inputs, not new Phase 6 verification.
 
 ## Baseline audit
@@ -34,4 +36,4 @@ The most recent Phase 5 acceptance report supersedes older isolated QA statement
 
 Initial delivery implemented documentation and a synthetic handler regression. Phase 6.1 adds the local-only feasibility probe and verification-only CI. Production ingress implementation stops on the documented Free feasibility condition. No credentials, deployments, cloud settings, persistent fixtures, migrations, cleanup, DNS changes, invitations or paid upgrades are authorized by this work. Phase 4 and Phase 5 staging stay intact. PR base must be Phase 5; neither branch merges into main.
 
-Next checkpoint: owner chooses the next local optimization/design/budget evaluation after reviewing the feasibility blocker. Architecture C approval does not waive the Free safety condition. Approval to code is distinct from approval to provision/deploy and to create live fixtures.
+Final bounded optimization concludes **Decision B**: Workers Free is not practical at the unchanged three-image/5 MiB limits; recommend a separately approved Paid-target repository candidate, first adding local two-request max-memory tests. This is not approval to purchase Paid, provision, bind secrets, deploy, activate intake or create persistent fixtures. Any later hosted preview requires a new exact-SHA approval after local implementation review. See the final checkpoint section in `feasibility-report.md` for authoritative measurements; earlier preliminary estimates in this README/report are superseded.

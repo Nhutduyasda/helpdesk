@@ -2,6 +2,8 @@
 
 Status: architecture C conditionally approved for repository/local implementation, 2026-10-13. Owner requires Free feasibility before extensive changes. [Local feasibility](feasibility-report.md) fails to establish the 10 ms CPU budget at existing maximum images; production implementation stops. No architecture endpoint or cloud configuration implemented.
 
+Final bounded profiling confirms ~130–152 ms inspector samples at max size. Recommend B, a separately approved Paid-target implementation; validate memory/concurrency and hosted SDK behavior first. No purchase, Worker secret, endpoint, or deployment authorization is implied.
+
 ## Threat and constraints
 
 Fewer than ten employees; anonymous reporting with private images; authenticated IT administration. Preserve existing ticket RPCs, UI and data. CORS is a browser policy, not caller authentication. Solved Turnstile challenges do not prove employee identity. A request flood can consume gateway execution and shared office quota without creating a ticket. Auth, REST and Storage remain public provider services protected by Auth/RLS; protecting intake does not make all Supabase APIs private.
@@ -49,5 +51,9 @@ Before approval to deploy: local regression/build/scan and measured maximum uplo
 Rollback: disable only the new intake route and use manual contact; retain data, reservations, objects, schema and original staging resources. Redeploy last reviewed Worker version if safe. If Edge has been retired, restoring anonymous Edge requires separate authorization and reopens the known risk; never restore automatically. Admin can remain available independently. Record version/config, reconcile partial drafts read-only, and preserve idempotency records. No destructive migration rollback.
 
 Approval requested: architecture C and the exact code scope above; separately specify permission for isolated Worker provisioning/secrets/route, exact-SHA deployment, Edge retirement and bounded persistent QA fixtures. No production migration, URL cutover, paid plan or staff invitation is bundled into approval.
+
+## Final local feasibility decision — 2026-10-13
+
+The owner authorized a bounded local profiling/optimization round. Final measurements in [feasibility report](feasibility-report.md) show about 130–152 ms sampled active CPU for three 5 MiB images, against Free's 10 ms limit; body buffering and mandatory SHA-256 dominate. Per the stop condition, optimization stopped without changing runtime intake code. Recommendation is **B: consider a Workers Paid target**, with no purchase or deployment authorized. Paid retains a 128 MiB isolate limit; max-case snapshots reached ~105 MiB backing storage, so peak and concurrency need local validation before cloud review. Secret-key operations still carry broad service_role/RLS-bypass authority. The next approval checkpoint is a scoped Paid-target repository implementation plus two-request local memory tests; hosted preview requires a later separate approval. Phase 6 remains IN PROGRESS and public pilot NO-GO.
 
 Sources checked 2026-10-13: links above; [Turnstile validation](https://developers.cloudflare.com/turnstile/get-started/server-side-validation/) (five-minute single-use challenge; fresh challenge for retry); [Supabase changelog](https://supabase.com/changelog) (October 12 TLS deprecation, earliest removal November 10; verify supported pilot devices). Markdown changelog fetch was unsupported by web reader, so HTML changelog was reviewed. No relevant schema change implemented.
