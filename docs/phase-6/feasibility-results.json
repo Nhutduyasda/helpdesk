@@ -1,0 +1,1038 @@
+{
+  "runtime": "5.20261006.1-alpha",
+  "workerd": "1.20261006.1",
+  "esbuild": "0.28.2",
+  "compatibilityDate": "2026-08-06",
+  "platform": "win32",
+  "node": "v24.19.0",
+  "instrumentation": "The exact checked-out handler source is instrumented in-memory at checked unique stage anchors before bundling; repository handler file is not modified.",
+  "backend": "in-memory synthetic gateway/verifier; upload records lengths only, no byte copies; outbound HTTP is blocked; no real provider HTTP evidence",
+  "measurement": "Inspector CPU sampling excludes idle/program/root. Sample estimate is not Cloudflare billed CPU. Stage durations are local wall intervals with synchronous fake dependencies, not Cloudflare per-function CPU; separate CPU samples identify hotspots. Heap/backing storage snapshots share one isolate with natural GC, not total isolate peak or per-request memory. Local runtime does not enforce hosted Free CPU.",
+  "cases": [
+    {
+      "images": 0,
+      "bytesPerImage": 0,
+      "repetitions": [
+        {
+          "payloadBytes": 2948,
+          "wallMs": 17.78819999999996,
+          "sampledActiveMs": 13.147,
+          "byFunctionUs": {
+            "fetch": 11791,
+            "(anonymous)": 693,
+            "__phase6Time": 663
+          },
+          "stages": [
+            {
+              "label": "body_buffer",
+              "ms": 1
+            },
+            {
+              "label": "multipart_parse",
+              "ms": 0
+            },
+            {
+              "label": "request_hash",
+              "ms": 1
+            },
+            {
+              "label": "reservation",
+              "ms": 0
+            },
+            {
+              "label": "finalization",
+              "ms": 0
+            }
+          ],
+          "heapBefore": {
+            "usedSize": 735464,
+            "totalSize": 1572864,
+            "embedderHeapUsedSize": 515872,
+            "backingStorageSize": 226692
+          },
+          "heapAfter": {
+            "usedSize": 850956,
+            "totalSize": 2097152,
+            "embedderHeapUsedSize": 515872,
+            "backingStorageSize": 240212
+          },
+          "status": 200,
+          "uploads": 0
+        },
+        {
+          "payloadBytes": 2948,
+          "wallMs": 4.103600000000029,
+          "sampledActiveMs": 0,
+          "byFunctionUs": {},
+          "stages": [
+            {
+              "label": "body_buffer",
+              "ms": 0
+            },
+            {
+              "label": "multipart_parse",
+              "ms": 0
+            },
+            {
+              "label": "request_hash",
+              "ms": 0
+            },
+            {
+              "label": "reservation",
+              "ms": 0
+            },
+            {
+              "label": "finalization",
+              "ms": 0
+            }
+          ],
+          "heapBefore": {
+            "usedSize": 850956,
+            "totalSize": 2097152,
+            "embedderHeapUsedSize": 515872,
+            "backingStorageSize": 240212
+          },
+          "heapAfter": {
+            "usedSize": 876416,
+            "totalSize": 2097152,
+            "embedderHeapUsedSize": 515872,
+            "backingStorageSize": 253732
+          },
+          "status": 200,
+          "uploads": 0
+        },
+        {
+          "payloadBytes": 2948,
+          "wallMs": 4.253500000000031,
+          "sampledActiveMs": 3.312,
+          "byFunctionUs": {
+            "(garbage collector)": 2730,
+            "(anonymous)": 582
+          },
+          "stages": [
+            {
+              "label": "body_buffer",
+              "ms": 1
+            },
+            {
+              "label": "multipart_parse",
+              "ms": 0
+            },
+            {
+              "label": "request_hash",
+              "ms": 0
+            },
+            {
+              "label": "reservation",
+              "ms": 0
+            },
+            {
+              "label": "finalization",
+              "ms": 0
+            }
+          ],
+          "heapBefore": {
+            "usedSize": 876416,
+            "totalSize": 2097152,
+            "embedderHeapUsedSize": 515872,
+            "backingStorageSize": 253732
+          },
+          "heapAfter": {
+            "usedSize": 908404,
+            "totalSize": 2097152,
+            "embedderHeapUsedSize": 515872,
+            "backingStorageSize": 267252
+          },
+          "status": 200,
+          "uploads": 0
+        }
+      ]
+    },
+    {
+      "images": 1,
+      "bytesPerImage": 65536,
+      "repetitions": [
+        {
+          "payloadBytes": 68622,
+          "wallMs": 5.888699999999972,
+          "sampledActiveMs": 3.904,
+          "byFunctionUs": {
+            "(anonymous)": 3904
+          },
+          "stages": [
+            {
+              "label": "body_buffer",
+              "ms": 0
+            },
+            {
+              "label": "multipart_parse",
+              "ms": 0
+            },
+            {
+              "label": "file_signature",
+              "ms": 0
+            },
+            {
+              "label": "file_hash",
+              "ms": 0
+            },
+            {
+              "label": "request_hash",
+              "ms": 0
+            },
+            {
+              "label": "reservation",
+              "ms": 0
+            },
+            {
+              "label": "storage_upload",
+              "ms": 0
+            },
+            {
+              "label": "finalization",
+              "ms": 0
+            }
+          ],
+          "heapBefore": {
+            "usedSize": 908404,
+            "totalSize": 2097152,
+            "embedderHeapUsedSize": 515872,
+            "backingStorageSize": 267252
+          },
+          "heapAfter": {
+            "usedSize": 969072,
+            "totalSize": 2359296,
+            "embedderHeapUsedSize": 515872,
+            "backingStorageSize": 543208
+          },
+          "status": 200,
+          "uploads": 1
+        },
+        {
+          "payloadBytes": 68622,
+          "wallMs": 4.944500000000062,
+          "sampledActiveMs": 3.667,
+          "byFunctionUs": {
+            "timeout": 2973,
+            "json": 694
+          },
+          "stages": [
+            {
+              "label": "body_buffer",
+              "ms": 0
+            },
+            {
+              "label": "multipart_parse",
+              "ms": 0
+            },
+            {
+              "label": "file_signature",
+              "ms": 0
+            },
+            {
+              "label": "file_hash",
+              "ms": 0
+            },
+            {
+              "label": "request_hash",
+              "ms": 0
+            },
+            {
+              "label": "reservation",
+              "ms": 0
+            },
+            {
+              "label": "storage_upload",
+              "ms": 0
+            },
+            {
+              "label": "finalization",
+              "ms": 0
+            }
+          ],
+          "heapBefore": {
+            "usedSize": 969072,
+            "totalSize": 2359296,
+            "embedderHeapUsedSize": 515872,
+            "backingStorageSize": 543208
+          },
+          "heapAfter": {
+            "usedSize": 1021412,
+            "totalSize": 2359296,
+            "embedderHeapUsedSize": 515872,
+            "backingStorageSize": 819164
+          },
+          "status": 200,
+          "uploads": 1
+        },
+        {
+          "payloadBytes": 68622,
+          "wallMs": 4.43889999999999,
+          "sampledActiveMs": 2.747,
+          "byFunctionUs": {
+            "timeout": 2071,
+            "digest": 676
+          },
+          "stages": [
+            {
+              "label": "body_buffer",
+              "ms": 1
+            },
+            {
+              "label": "multipart_parse",
+              "ms": 0
+            },
+            {
+              "label": "file_signature",
+              "ms": 0
+            },
+            {
+              "label": "file_hash",
+              "ms": 0
+            },
+            {
+              "label": "request_hash",
+              "ms": 0
+            },
+            {
+              "label": "reservation",
+              "ms": 0
+            },
+            {
+              "label": "storage_upload",
+              "ms": 0
+            },
+            {
+              "label": "finalization",
+              "ms": 0
+            }
+          ],
+          "heapBefore": {
+            "usedSize": 1021412,
+            "totalSize": 2359296,
+            "embedderHeapUsedSize": 515872,
+            "backingStorageSize": 819164
+          },
+          "heapAfter": {
+            "usedSize": 1072844,
+            "totalSize": 2359296,
+            "embedderHeapUsedSize": 515872,
+            "backingStorageSize": 1095120
+          },
+          "status": 200,
+          "uploads": 1
+        }
+      ]
+    },
+    {
+      "images": 3,
+      "bytesPerImage": 65536,
+      "repetitions": [
+        {
+          "payloadBytes": 199970,
+          "wallMs": 4.947999999999979,
+          "sampledActiveMs": 4.145,
+          "byFunctionUs": {
+            "get": 2337,
+            "(garbage collector)": 626,
+            "digest": 1182
+          },
+          "stages": [
+            {
+              "label": "body_buffer",
+              "ms": 1
+            },
+            {
+              "label": "multipart_parse",
+              "ms": 1
+            },
+            {
+              "label": "file_signature",
+              "ms": 0
+            },
+            {
+              "label": "file_hash",
+              "ms": 0
+            },
+            {
+              "label": "file_signature",
+              "ms": 0
+            },
+            {
+              "label": "file_hash",
+              "ms": 0
+            },
+            {
+              "label": "file_signature",
+              "ms": 0
+            },
+            {
+              "label": "file_hash",
+              "ms": 0
+            },
+            {
+              "label": "request_hash",
+              "ms": 0
+            },
+            {
+              "label": "reservation",
+              "ms": 0
+            },
+            {
+              "label": "storage_upload",
+              "ms": 0
+            },
+            {
+              "label": "storage_upload",
+              "ms": 0
+            },
+            {
+              "label": "storage_upload",
+              "ms": 0
+            },
+            {
+              "label": "finalization",
+              "ms": 0
+            }
+          ],
+          "heapBefore": {
+            "usedSize": 1072844,
+            "totalSize": 2359296,
+            "embedderHeapUsedSize": 515872,
+            "backingStorageSize": 1095120
+          },
+          "heapAfter": {
+            "usedSize": 1178984,
+            "totalSize": 2621440,
+            "embedderHeapUsedSize": 515872,
+            "backingStorageSize": 1895950
+          },
+          "status": 200,
+          "uploads": 3
+        },
+        {
+          "payloadBytes": 199970,
+          "wallMs": 5.143100000000004,
+          "sampledActiveMs": 3.328,
+          "byFunctionUs": {
+            "read": 2168,
+            "json": 588,
+            "digest": 572
+          },
+          "stages": [
+            {
+              "label": "body_buffer",
+              "ms": 1
+            },
+            {
+              "label": "multipart_parse",
+              "ms": 0
+            },
+            {
+              "label": "file_signature",
+              "ms": 0
+            },
+            {
+              "label": "file_hash",
+              "ms": 0
+            },
+            {
+              "label": "file_signature",
+              "ms": 0
+            },
+            {
+              "label": "file_hash",
+              "ms": 0
+            },
+            {
+              "label": "file_signature",
+              "ms": 0
+            },
+            {
+              "label": "file_hash",
+              "ms": 0
+            },
+            {
+              "label": "request_hash",
+              "ms": 0
+            },
+            {
+              "label": "reservation",
+              "ms": 0
+            },
+            {
+              "label": "storage_upload",
+              "ms": 0
+            },
+            {
+              "label": "storage_upload",
+              "ms": 0
+            },
+            {
+              "label": "storage_upload",
+              "ms": 0
+            },
+            {
+              "label": "finalization",
+              "ms": 0
+            }
+          ],
+          "heapBefore": {
+            "usedSize": 1178984,
+            "totalSize": 2621440,
+            "embedderHeapUsedSize": 515872,
+            "backingStorageSize": 1895950
+          },
+          "heapAfter": {
+            "usedSize": 1286460,
+            "totalSize": 2621440,
+            "embedderHeapUsedSize": 515872,
+            "backingStorageSize": 2696780
+          },
+          "status": 200,
+          "uploads": 3
+        },
+        {
+          "payloadBytes": 199970,
+          "wallMs": 5.008800000000065,
+          "sampledActiveMs": 3.826,
+          "byFunctionUs": {
+            "read": 2623,
+            "digest": 1203
+          },
+          "stages": [
+            {
+              "label": "body_buffer",
+              "ms": 1
+            },
+            {
+              "label": "multipart_parse",
+              "ms": 1
+            },
+            {
+              "label": "file_signature",
+              "ms": 0
+            },
+            {
+              "label": "file_hash",
+              "ms": 0
+            },
+            {
+              "label": "file_signature",
+              "ms": 0
+            },
+            {
+              "label": "file_hash",
+              "ms": 0
+            },
+            {
+              "label": "file_signature",
+              "ms": 0
+            },
+            {
+              "label": "file_hash",
+              "ms": 0
+            },
+            {
+              "label": "request_hash",
+              "ms": 0
+            },
+            {
+              "label": "reservation",
+              "ms": 0
+            },
+            {
+              "label": "storage_upload",
+              "ms": 0
+            },
+            {
+              "label": "storage_upload",
+              "ms": 0
+            },
+            {
+              "label": "storage_upload",
+              "ms": 0
+            },
+            {
+              "label": "finalization",
+              "ms": 0
+            }
+          ],
+          "heapBefore": {
+            "usedSize": 1286460,
+            "totalSize": 2621440,
+            "embedderHeapUsedSize": 515872,
+            "backingStorageSize": 2696780
+          },
+          "heapAfter": {
+            "usedSize": 1401336,
+            "totalSize": 2883584,
+            "embedderHeapUsedSize": 515872,
+            "backingStorageSize": 3497610
+          },
+          "status": 200,
+          "uploads": 3
+        }
+      ]
+    },
+    {
+      "images": 1,
+      "bytesPerImage": 5242880,
+      "repetitions": [
+        {
+          "payloadBytes": 5245966,
+          "wallMs": 61.10130000000004,
+          "sampledActiveMs": 52.374,
+          "byFunctionUs": {
+            "read": 15259,
+            "(anonymous)": 7805,
+            "(garbage collector)": 1253,
+            "boundedBody": 4330,
+            "Request": 1245,
+            "arrayBuffer": 1285,
+            "digest": 20515,
+            "json": 682
+          },
+          "stages": [
+            {
+              "label": "body_buffer",
+              "ms": 26
+            },
+            {
+              "label": "multipart_parse",
+              "ms": 6
+            },
+            {
+              "label": "file_signature",
+              "ms": 0
+            },
+            {
+              "label": "file_hash",
+              "ms": 20
+            },
+            {
+              "label": "request_hash",
+              "ms": 0
+            },
+            {
+              "label": "reservation",
+              "ms": 0
+            },
+            {
+              "label": "storage_upload",
+              "ms": 0
+            },
+            {
+              "label": "finalization",
+              "ms": 0
+            }
+          ],
+          "heapBefore": {
+            "usedSize": 1401336,
+            "totalSize": 2883584,
+            "embedderHeapUsedSize": 515872,
+            "backingStorageSize": 3497610
+          },
+          "heapAfter": {
+            "usedSize": 2430656,
+            "totalSize": 5242880,
+            "embedderHeapUsedSize": 1031728,
+            "backingStorageSize": 21998458
+          },
+          "status": 200,
+          "uploads": 1
+        },
+        {
+          "payloadBytes": 5245966,
+          "wallMs": 58.6413,
+          "sampledActiveMs": 54.674,
+          "byFunctionUs": {
+            "boundedBody": 11308,
+            "read": 13921,
+            "(anonymous)": 8786,
+            "(garbage collector)": 541,
+            "Request": 1176,
+            "arrayBuffer": 605,
+            "digest": 18337
+          },
+          "stages": [
+            {
+              "label": "body_buffer",
+              "ms": 26
+            },
+            {
+              "label": "multipart_parse",
+              "ms": 7
+            },
+            {
+              "label": "file_signature",
+              "ms": 0
+            },
+            {
+              "label": "file_hash",
+              "ms": 18
+            },
+            {
+              "label": "request_hash",
+              "ms": 0
+            },
+            {
+              "label": "reservation",
+              "ms": 0
+            },
+            {
+              "label": "storage_upload",
+              "ms": 0
+            },
+            {
+              "label": "finalization",
+              "ms": 0
+            }
+          ],
+          "heapBefore": {
+            "usedSize": 2430656,
+            "totalSize": 5242880,
+            "embedderHeapUsedSize": 1031728,
+            "backingStorageSize": 21998458
+          },
+          "heapAfter": {
+            "usedSize": 3903616,
+            "totalSize": 6291456,
+            "embedderHeapUsedSize": 1547584,
+            "backingStorageSize": 37734280
+          },
+          "status": 200,
+          "uploads": 1
+        },
+        {
+          "payloadBytes": 5245966,
+          "wallMs": 53.7136999999999,
+          "sampledActiveMs": 46.212,
+          "byFunctionUs": {
+            "(anonymous)": 10727,
+            "boundedBody": 6308,
+            "read": 11451,
+            "Request": 575,
+            "arrayBuffer": 1211,
+            "digest": 15940
+          },
+          "stages": [
+            {
+              "label": "body_buffer",
+              "ms": 24
+            },
+            {
+              "label": "multipart_parse",
+              "ms": 6
+            },
+            {
+              "label": "file_signature",
+              "ms": 0
+            },
+            {
+              "label": "file_hash",
+              "ms": 16
+            },
+            {
+              "label": "request_hash",
+              "ms": 0
+            },
+            {
+              "label": "reservation",
+              "ms": 0
+            },
+            {
+              "label": "storage_upload",
+              "ms": 0
+            },
+            {
+              "label": "finalization",
+              "ms": 0
+            }
+          ],
+          "heapBefore": {
+            "usedSize": 3903616,
+            "totalSize": 6291456,
+            "embedderHeapUsedSize": 1547584,
+            "backingStorageSize": 37734280
+          },
+          "heapAfter": {
+            "usedSize": 5698472,
+            "totalSize": 8126464,
+            "embedderHeapUsedSize": 2063440,
+            "backingStorageSize": 58719614
+          },
+          "status": 200,
+          "uploads": 1
+        }
+      ]
+    },
+    {
+      "images": 3,
+      "bytesPerImage": 5242880,
+      "repetitions": [
+        {
+          "payloadBytes": 15732002,
+          "wallMs": 151.49239999999998,
+          "sampledActiveMs": 129.616,
+          "byFunctionUs": {
+            "addEventListener": 12755,
+            "(garbage collector)": 1904,
+            "(anonymous)": 13384,
+            "read": 34681,
+            "boundedBody": 12209,
+            "Request": 3407,
+            "arrayBuffer": 3743,
+            "digest": 47533
+          },
+          "stages": [
+            {
+              "label": "body_buffer",
+              "ms": 68
+            },
+            {
+              "label": "multipart_parse",
+              "ms": 19
+            },
+            {
+              "label": "file_signature",
+              "ms": 0
+            },
+            {
+              "label": "file_hash",
+              "ms": 17
+            },
+            {
+              "label": "file_signature",
+              "ms": 0
+            },
+            {
+              "label": "file_hash",
+              "ms": 16
+            },
+            {
+              "label": "file_signature",
+              "ms": 0
+            },
+            {
+              "label": "file_hash",
+              "ms": 15
+            },
+            {
+              "label": "request_hash",
+              "ms": 0
+            },
+            {
+              "label": "reservation",
+              "ms": 0
+            },
+            {
+              "label": "storage_upload",
+              "ms": 0
+            },
+            {
+              "label": "storage_upload",
+              "ms": 0
+            },
+            {
+              "label": "storage_upload",
+              "ms": 0
+            },
+            {
+              "label": "finalization",
+              "ms": 0
+            }
+          ],
+          "heapBefore": {
+            "usedSize": 5698472,
+            "totalSize": 8126464,
+            "embedderHeapUsedSize": 2063440,
+            "backingStorageSize": 58719614
+          },
+          "heapAfter": {
+            "usedSize": 8427156,
+            "totalSize": 12845056,
+            "embedderHeapUsedSize": 3610992,
+            "backingStorageSize": 90163670
+          },
+          "status": 200,
+          "uploads": 3
+        },
+        {
+          "payloadBytes": 15732002,
+          "wallMs": 164.68990000000008,
+          "sampledActiveMs": 151.803,
+          "byFunctionUs": {
+            "timeout": 12822,
+            "boundedBody": 11063,
+            "read": 38459,
+            "(garbage collector)": 8949,
+            "(anonymous)": 20717,
+            "Request": 4140,
+            "formData": 677,
+            "arrayBuffer": 3552,
+            "digest": 51424
+          },
+          "stages": [
+            {
+              "label": "body_buffer",
+              "ms": 74
+            },
+            {
+              "label": "multipart_parse",
+              "ms": 21
+            },
+            {
+              "label": "file_signature",
+              "ms": 0
+            },
+            {
+              "label": "file_hash",
+              "ms": 16
+            },
+            {
+              "label": "file_signature",
+              "ms": 0
+            },
+            {
+              "label": "file_hash",
+              "ms": 15
+            },
+            {
+              "label": "file_signature",
+              "ms": 0
+            },
+            {
+              "label": "file_hash",
+              "ms": 20
+            },
+            {
+              "label": "request_hash",
+              "ms": 0
+            },
+            {
+              "label": "reservation",
+              "ms": 0
+            },
+            {
+              "label": "storage_upload",
+              "ms": 0
+            },
+            {
+              "label": "storage_upload",
+              "ms": 0
+            },
+            {
+              "label": "storage_upload",
+              "ms": 0
+            },
+            {
+              "label": "finalization",
+              "ms": 0
+            }
+          ],
+          "heapBefore": {
+            "usedSize": 8427156,
+            "totalSize": 12845056,
+            "embedderHeapUsedSize": 3610992,
+            "backingStorageSize": 90163670
+          },
+          "heapAfter": {
+            "usedSize": 5210616,
+            "totalSize": 10223616,
+            "embedderHeapUsedSize": 1426248,
+            "backingStorageSize": 78884296
+          },
+          "status": 200,
+          "uploads": 3
+        },
+        {
+          "payloadBytes": 15732002,
+          "wallMs": 148.14969999999994,
+          "sampledActiveMs": 133.412,
+          "byFunctionUs": {
+            "boundedBody": 21424,
+            "read": 33990,
+            "(anonymous)": 19739,
+            "(garbage collector)": 2796,
+            "Request": 3029,
+            "arrayBuffer": 2857,
+            "digest": 49577
+          },
+          "stages": [
+            {
+              "label": "body_buffer",
+              "ms": 65
+            },
+            {
+              "label": "multipart_parse",
+              "ms": 19
+            },
+            {
+              "label": "file_signature",
+              "ms": 0
+            },
+            {
+              "label": "file_hash",
+              "ms": 17
+            },
+            {
+              "label": "file_signature",
+              "ms": 0
+            },
+            {
+              "label": "file_hash",
+              "ms": 16
+            },
+            {
+              "label": "file_signature",
+              "ms": 0
+            },
+            {
+              "label": "file_hash",
+              "ms": 16
+            },
+            {
+              "label": "request_hash",
+              "ms": 0
+            },
+            {
+              "label": "reservation",
+              "ms": 0
+            },
+            {
+              "label": "storage_upload",
+              "ms": 0
+            },
+            {
+              "label": "storage_upload",
+              "ms": 0
+            },
+            {
+              "label": "storage_upload",
+              "ms": 0
+            },
+            {
+              "label": "finalization",
+              "ms": 0
+            }
+          ],
+          "heapBefore": {
+            "usedSize": 5210616,
+            "totalSize": 10223616,
+            "embedderHeapUsedSize": 1426248,
+            "backingStorageSize": 78884296
+          },
+          "heapAfter": {
+            "usedSize": 7259444,
+            "totalSize": 15204352,
+            "embedderHeapUsedSize": 2965952,
+            "backingStorageSize": 110340842
+          },
+          "status": 200,
+          "uploads": 3
+        }
+      ]
+    }
+  ]
+}

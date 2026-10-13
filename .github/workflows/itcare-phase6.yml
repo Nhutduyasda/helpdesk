@@ -1,0 +1,40 @@
+name: ITCare Phase 6 verification only
+on:
+  push:
+    branches: [codex/phase-6-operational-readiness]
+  pull_request:
+    branches: [codex/phase-5-passwordless-reporting]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run lint:itcare
+      - run: npx eslint scripts/phase6-feasibility.mjs scripts/phase6-feasibility-worker.ts supabase/functions/public-intake --max-warnings 0
+      - run: npx tsc -p scripts/phase6-probe-tsconfig.json
+      - run: npm audit --audit-level=high
+      - run: npm run build
+      - run: node scripts/scan-build.mjs
+        env:
+          BUILD_SCAN_REPORT: docs/phase-6/ci-build-scan.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: phase6-local-verification
+          path: |
+            docs/phase-6/ci-build-scan.json
+          retention-days: 7
+# No cloud credentials, environment approval gates, deploy job or live fixtures.
+# Passing runtime contracts does not assert Free CPU feasibility or pilot readiness.
+# Benchmark tooling is intentionally not installed in CI: its stable version has
+# separate audit findings. Local measurements are evidence, not an audit waiver.

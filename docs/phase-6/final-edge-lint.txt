@@ -1,0 +1,1 @@
+PASS (no diagnostics; eslint --max-warnings 0)

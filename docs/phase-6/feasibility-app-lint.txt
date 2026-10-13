@@ -1,0 +1,3 @@
+
+> shadcn-dashboard-free@1.0.0 lint:itcare
+> eslint src/api/itcare src/context/itcare src/integrations/supabase src/services/itcare src/views/itcare src/hooks/use-online.ts src/layouts/full/vertical/header/Header.tsx src/layouts/full/vertical/sidebar/Sidebar.tsx src/routes/Router.tsx src/main.tsx src/api/global-fetcher.ts vite.config.ts --max-warnings 0
