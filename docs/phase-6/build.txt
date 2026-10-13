@@ -125,7 +125,7 @@ dist/assets/create-DCH93XNi.js                     478.80 kB │ gzip: 147.59 kB
 dist/assets/iconify-GuFRiYr-.js                    889.54 kB │ gzip: 290.64 kB
 
 ✓ built in 2.98s
-[plugin builtin:vite-reporter] 
+[plugin builtin:vite-reporter]
 (!) Some chunks are larger than 500 kB after minification. Consider:
 - Using dynamic import() to code-split the application
 - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting

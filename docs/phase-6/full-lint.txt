@@ -40,4 +40,3 @@ C:\Users\nhutd\ITCare-Cloudflare\ITCare-staging\src\types\apps\blog.ts
   20:17  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
 
 ✖ 16 problems (13 errors, 3 warnings)
-
